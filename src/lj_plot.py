@@ -9,7 +9,7 @@ def ev_per_k_to_ev(n):
 
 def lj_potential(r: np.linspace, epsilon: float, sigma: float) -> float:
     """
-    Calculates Lennard Jones potential in Joules
+    Calculates Lennard Jones potential in eV
 
     Args:
         sigma: van de Waals radius; how close the two particles can get (Å)
