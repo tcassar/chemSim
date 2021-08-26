@@ -1,20 +1,20 @@
 import atom
 import interaction
 
-if __name__ == '__main__':
-    ar1, ar2 = atom.Atom(), atom.Atom()
-    ar1.update_s(3, 4)
-    ar2.update_s(6, 8)
+# TODO: Everything needs tests written: research how one tests
+# TODO: Make sure two particles never overlap position
 
-    # print(f'Ar1 Vitals: {ar1.vitals()}')
-    # print(f'Ar2 Vitals: {ar2.vitals()}')
+if __name__ == '__main__':
+    ar1, ar2 = atom.Atom([4, 5]), atom.Atom([6, 8])
+
+    print(f'Ar1: {ar1}')
+    print(f'Ar2: {ar2}')
 
     intr = interaction.Interaction(ar1, ar2)
-    print(f'Distance: {intr.distance()}')
-    print(f'LJ Energy (K): {intr.lj_energy()}')
+    print(f'Distance: {intr.distance():.4f}')
+    print(f'LJ Energy (J): {intr.lj_energy():.4f}')
+    print(f'LJ Force (N): {intr.lj_force(): .4f}')
+    intr.delegate_force(v=True)
 
-    ar1.update_s(3, 4)
-    ar2.update_s(6, 8)
-
-    print(f'Distance: {intr.distance()}')
-    print(f'LJ Energy (K): {intr.lj_energy()}')
+    print(f'Ar1 Vitals: {ar1}')
+    print(f'Ar2 Vitals: {ar2}')

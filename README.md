@@ -1,7 +1,11 @@
 # chemSim
 
+## Molecular Dynamics Simulation
+
 ---
 
-## Intro
+Project to simulate motion of atoms / molecules based off forces they exert on each other.
 
-Project aimed at loosely simulating chemical interactions using Python3, visualised with MatPlotLib
+Start with simulating an Ar-Ar interaction, getting interatomic energies from Lennard-Jones potential.
+
+Intention is to scale further to work with a useful number of molecules, and branch out
