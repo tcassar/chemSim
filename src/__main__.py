@@ -3,6 +3,7 @@ import interaction
 
 # TODO: Everything needs tests written: research how one tests
 # TODO: Make sure two particles never overlap position
+# TODO: Proper RU Mode vs real mode
 
 if __name__ == '__main__':
     ar1, ar2 = atom.Atom([4, 5]), atom.Atom([6, 8])

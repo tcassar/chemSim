@@ -80,5 +80,5 @@ class Interaction:
         self.j.evaluate_next_state(np.multiply(force, -1))
 
         if v:
-            print(f'i receives force{utils.dec_to_str(force[0])}N\n'
-                  f'j receives force{utils.dec_to_str(force[1])}N\n')
+            force_printable = f'{utils.dec_to_str(force[0])}, {utils.dec_to_str(force[1])}'
+            print(f'both receives force({force_printable})N\n')
