@@ -1,6 +1,7 @@
 from utils import *
 from decimal import Decimal
 import numpy as np
+from typing import Callable, ClassVar
 
 
 class Atom:
@@ -20,7 +21,7 @@ class Atom:
         if not ru:
             self.MASS: Decimal = Decimal('36')  # Daltons
         else:
-            self.MASS: Decimal = Decimal('36')
+            self.MASS: Decimal = Decimal('1')
 
     def __repr__(self):
         decs = [*self.position, *self.velocity]
@@ -31,12 +32,12 @@ class Atom:
     def set_attrs(self, *, s: List[int], v: List[int]) -> None:
         """For testing, directly sets displacement and velocity"""
 
-        s, v = int_to_dec(s), int_to_dec(v)
+        s, v = intlist_to_dec(s), intlist_to_dec(v)
 
         self.velocity = v
         self.position = s
 
-    def vitals(self, *, s=True, v=True) -> List[Decimal]:
+    def vitals(self, *, s=True, v=True) -> List[List[Decimal]]:
         """returns s and/or v in list form (only returns what is asked)"""
         out = [self.position, self.velocity]
         if not v:
@@ -44,34 +45,29 @@ class Atom:
         if not s:
             out = self.velocity
 
-        # print(out)
+        return out if s or v else []
 
-        return list(out) if s or v else []
+    def evaluate_next_state(self, force: List[Decimal]) -> None:
+        """Evaluates next state based off previous state using SUVAT"""
+        a = np.divide(force, self.MASS)
 
-    def evaluate_next_state(self, vector: List[Decimal], v=False) -> str:
-        """
-        Updates velocity and position of particle for cycle n+1, based only off cycle n.
-        Receives force vector (split into *i* and *j* components), returns a string (with updated info
-        if set to verbose mode)
-        """
-        # TODO: needs better name
+        sn: List[Decimal]
+        vn: List[Decimal]
+        sn, vn = self.vitals()
+        t = Decimal(1)
 
-        # DALTON_TO_KG = np.power(Decimal('1.66054'), -27)
-        # MASS = np.multiply(self.MASS, DALTON_TO_KG)
-        MASS = 1
+        # v = u + at, t = 1
+        self.velocity = np.add(vn, np.multiply(a, t))
 
-        # Generate DELTA FOR 1 CYCLE i.e. needs to be added to previous
+        # s = ut + 1/2 a * t**2, t = 1
+        self.position = np.add(np.multiply(vn, t), np.divide(np.multiply(a, t ** 2), 2))
 
-        # remember current state
-        u = self.velocity
-        st = self.position
+    def limit(self, force_eq: List, subpoints: int, point: int):
 
-        acceleration = np.divide(vector, MASS)  # all units SI
-        velocity = u + acceleration  # SUVAT, v = u + at where t=1 cycle
-        st_1 = u + np.divide(acceleration, 2)  # SUVAT: s = ut + 1/2 * a * t^2 t=1 cycle
-
-        # Update atom state
-        self.velocity += velocity
-        self.position += st_1
-
-        return '' if not v else f'Velocity: {velocity}\nPos:{st_1}'
+        for subpoint in range(subpoints):
+            subpoint = Decimal(subpoint)
+            t = np.add(point,
+                       np.divide(subpoint, subpoints))
+            print(f't: {t!r}')
+            force = coef_to_dec(force_eq, t)
+            self.evaluate_next_state([force, 0])
