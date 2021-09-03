@@ -33,7 +33,7 @@ i_velocity = [0, Decimal(6), Decimal(2), Decimal(1)]
 ar1 = Atom()
 n = 10
 
-integral_points = line_from_integration(i_velocity, n)
+integral_points = line_from_integration(i_velocity, n) 
 atom_points = line_from_atom(i_velocity, n, ar1)
 
 plt.plot(*integral_points, 'r', label='Integral')

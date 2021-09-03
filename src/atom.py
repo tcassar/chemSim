@@ -37,7 +37,7 @@ class Atom:
         self.velocity = v
         self.position = s
 
-    def vitals(self, *, s=True, v=True) -> List[List[Decimal]]:
+    def vitals(self, *, s=True, v=True, read=False) -> List[List[Decimal]]:
         """returns s and/or v in list form (only returns what is asked)"""
         out = [self.position, self.velocity]
         if not v:

@@ -1,0 +1,6 @@
+from random import randrange
+
+for i in range(25):
+    print(randrange(-10, 10, 1))
+
+          
