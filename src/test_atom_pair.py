@@ -5,15 +5,11 @@ from utils import *
 from decimal import Decimal
 from unittest import TestCase
 from random import randrange
-from typing import List, Iterable
 import numpy as np
-import numpy.typing as npt
 
 
 # noinspection PyMethodMayBeStatic
 class AtomTestCase(TestCase):
-    def setUp(self) -> None:
-        random.seed(100)
 
     def test_position_update_0_velocity(self):
         """Tests that a force leads to the right movement with 0 velocity"""
@@ -34,11 +30,11 @@ class AtomTestCase(TestCase):
 
         for value in valid_values:
             p.set_attrs(s=[0, 0], v=[0, 0])
-            print(f'Testing with Force of {list(map(dec_to_str, value))}')
+            # print(f'Testing with Force of {list(map(dec_to_str, value))}')
             correct_disp = np.divide(value, 2)
             # print(correct_disp)
             p.evaluate_next_state(value)
-            self.assertListEqual(list(correct_disp), p.vitals(v=False))
+            self.assertListEqual(list(correct_disp), list(p.vitals()[0]))
 
     def test_staged_motion(self):
         """Checks final displacement and velocity from set discreet forces"""
@@ -61,10 +57,10 @@ class AtomTestCase(TestCase):
 
         atom_results = p.vitals()
         for i, _ in enumerate(result):
-            with self.subTest(i + 1):
+            with self.subTest(i):
                 self.assertListEqual(list(atom_results[i]), result[i])
 
-    def test_reversible(self, subtest=None):
+    def test_reversible(self, sub=None):
         """
         Test which creates a list of forces from an RNG, then applies same force *= -1 to atom. Atom should end at (0,0)
         with 0 velocity
@@ -74,9 +70,9 @@ class AtomTestCase(TestCase):
             return [Decimal(randrange(-10, 11)), Decimal(randrange(-10, 11))]
 
         p = Atom()
-        n = 25
+        n = 100
 
-        forces = [random_force() for i in range(n)]
+        forces = [random_force() for _ in range(n)]
         neg_forces = np.multiply(forces, -1)
 
         for force in forces:
@@ -85,8 +81,26 @@ class AtomTestCase(TestCase):
         for neg_force in neg_forces:
             p.evaluate_next_state(neg_force)
 
-        calculated = p.vitals()
-        for i, result in enumerate(calculated):
-            with self.subTest(i):
-                self.assertListEqual(list(result), [Decimal('0'), Decimal('0')])
+        calculated = p.vitals()[1]
+        self.assertListEqual(list(calculated), [Decimal('0'), Decimal('0')])
 
+    def test_constant_acc(self):
+        """Test calculated position and velocity from integration of constant acceleration"""
+
+        # Write how this fixed changing origin problem:
+        # I had thought that once new position was found old one would be overwritten. However, had not thought about
+        # fact that origin resets with circular approach
+
+        a = [Decimal(4), Decimal(0)]
+        v: Callable = lambda t: [4 * t, 0]
+        s: Callable = lambda t: [2 * (t ** 2), 0]
+        time = 10
+
+        p = Atom()
+
+        for i in range(time):
+            expected = [s(i), v(i)]
+            atom_results = p.vitals()
+            with self.subTest(f'3.{i}'):
+                self.assertListEqual(atom_results, expected)
+            p.evaluate_next_state(a)

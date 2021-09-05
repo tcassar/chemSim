@@ -39,11 +39,14 @@ class Atom:
 
     def vitals(self, *, s=True, v=True, read=False) -> List[List[Decimal]]:
         """returns s and/or v in list form (only returns what is asked)"""
-        out = [self.position, self.velocity]
+        # TODO: Fix output format to list
+        s, v = list(self.position), list(self.velocity)
+
+        out = [s, v]
         if not v:
-            out = self.position
+            out = s
         if not s:
-            out = self.velocity
+            out = v
 
         return out if s or v else []
 
@@ -60,7 +63,7 @@ class Atom:
         self.velocity = np.add(vn, np.multiply(a, t))
 
         # s = ut + 1/2 a * t**2, t = 1
-        self.position = np.add(np.multiply(vn, t), np.divide(np.multiply(a, t ** 2), 2))
+        self.position += np.add(np.multiply(vn, t), np.divide(np.multiply(a, t ** 2), 2))
 
     def limit(self, force_eq: List, subpoints: int, point: int):
 
