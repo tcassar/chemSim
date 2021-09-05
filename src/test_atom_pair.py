@@ -1,5 +1,3 @@
-import random
-
 from atom import Atom
 from utils import *
 from decimal import Decimal
@@ -49,7 +47,7 @@ class AtomTestCase(TestCase):
             [-3, 7]
         ]
 
-        result = [[Decimal('6.5'), Decimal('7.5')],  # displacement
+        result = [[Decimal('14.5'), Decimal('15.5')],  # displacement
                   [Decimal('5'), Decimal('11')]]  # velocity
 
         for force in forces:
@@ -60,7 +58,7 @@ class AtomTestCase(TestCase):
             with self.subTest(i):
                 self.assertListEqual(list(atom_results[i]), result[i])
 
-    def test_reversible(self, sub=None):
+    def test_reversible(self):
         """
         Test which creates a list of forces from an RNG, then applies same force *= -1 to atom. Atom should end at (0,0)
         with 0 velocity
