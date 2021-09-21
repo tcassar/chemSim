@@ -21,8 +21,8 @@ class Interaction:
         self.EPSILON = Decimal('1')  # TODO: Find the right values
 
     def lin_diffs(self) -> list:
-        s_i = self.i.vitals(v=False)
-        s_j = self.j.vitals(v=False)
+        s_i = self.i.vitals()[0]
+        s_j = self.j.vitals()[0]
 
         lin_diffs = []
         for i in range(2):

@@ -102,3 +102,16 @@ class AtomTestCase(TestCase):
             with self.subTest(f'3.{i}'):
                 self.assertListEqual(atom_results, expected)
             p.evaluate_next_state(a)
+
+
+class UtilsTestCase(TestCase):
+
+    def test_atan(self):
+        pi = np.pi
+        rt3 = np.sqrt(Decimal(3))
+        exact_vals = [0, rt3 / 3, 1, rt3]
+        results = [0, pi / 6, pi / 4, pi / 3]
+
+        for val, result in zip(exact_vals, results):
+            with self.subTest(exact_vals.index(val)):
+                self.assertEqual(inaccurate_atan(val), result)

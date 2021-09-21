@@ -1,7 +1,6 @@
 from decimal import Decimal
-from typing import List, Callable
+from typing import List, Callable, TextIO
 import numpy as np
-
 
 
 def dec_to_str(n: Decimal) -> str:
@@ -28,6 +27,17 @@ def coef_to_dec(coefficients: List[Decimal], x: Decimal) -> Decimal:
     """Converts a polynomial in coefficient form to a Decimal"""
     y: Decimal = Decimal('0')
     for i, coefficient in enumerate(coefficients):
-        y += coefficient * (x**i)
+        y += coefficient * (x ** i)
 
     return y
+
+
+def mylog(string: str, f: TextIO) -> None:
+    print(string)
+    f.write(string)
+
+
+def inaccurate_atan(theta: Decimal) -> Decimal:
+    """Dev only, too inaccurate and imprecise for final build"""
+    theta = float(f'{theta}')
+    return Decimal(np.arctan(theta))

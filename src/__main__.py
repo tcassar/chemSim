@@ -1,7 +1,7 @@
 import atom
 import interaction
+from utils import mylog
 
-# TODO: Everything needs tests written: research how one tests
 # TODO: Make sure two particles never overlap position
 # TODO: Proper RU Mode vs real mode
 
@@ -12,10 +12,13 @@ if __name__ == '__main__':
     print(f'Ar2: {ar2}')
 
     intr = interaction.Interaction(ar1, ar2)
-    print(f'Distance: {intr.distance():.4f}')
-    print(f'LJ Energy (J): {intr.lj_energy():.4f}')
-    print(f'LJ Force (N): {intr.lj_force(): .4f}')
-    intr.delegate_force(v=True)
-
-    print(f'Ar1 Vitals: {ar1}')
-    print(f'Ar2 Vitals: {ar2}')
+    
+    with open('interaction_cycle.txt', 'w') as f:     
+        for i in range(100):
+            mylog(f'Distance: {intr.distance():.4f}', f)
+            mylog(f'LJ Energy (J): {intr.lj_energy():.4f}', f)
+            mylog(f'LJ Force (N): {intr.lj_force(): .4f}', f)
+            intr.delegate_force(v=True)
+        
+            mylog(f'Ar1 Vitals: {ar1}', f)
+            mylog(f'Ar2 Vitals: {ar2}', f)
