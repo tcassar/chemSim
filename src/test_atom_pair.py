@@ -110,25 +110,33 @@ class ImpTrigTestCase(TestCase):
     def setUp(self) -> None:
         self.trig = ImpTrig()
 
+    def exec_tests(self, value, expected):
+
+        for val, exp in zip(value, expected):
+            with self.subTest():
+                self.assertAlmostEqual(float(val), exp)
+
     def test_atan(self):
+        func = np.arctan
+
         pi = np.pi
         rt3 = np.sqrt(3)
 
         exact_vals = [0, rt3 / 3, 1, rt3]
         results = [0, pi / 6, pi / 4, pi / 3]
 
-        for val, result in zip(exact_vals, results):
-            with self.subTest(exact_vals.index(val)):
-                self.assertEqual(self.trig.atan(val), result)
+        calculated = list(map(self.trig.atan, exact_vals))
+        self.exec_tests(calculated, results)
 
     def test_cos(self):
+        func = np.cos
+
         pi = np.pi
         rt3 = np.sqrt(3)
         rt2 = np.sqrt(2)
 
-        results = [1, rt3/2, rt2/2, 1/2, 0]
-        exact_vals = [0, pi/6, pi/4, pi/3, pi/2]
+        results = [1, rt3 / 2, rt2 / 2, 1 / 2, 0]
+        exact_vals = [0, pi / 6, pi / 4, pi / 3, pi / 2]
 
-        for val, result in zip(exact_vals, results):
-            with self.subTest(exact_vals.index(val)):
-                self.assertAlmostEqual(float(self.trig.cos(val)), result)
+        calculated = list(map(self.trig.cos, exact_vals))
+        self.exec_tests(calculated, results)
