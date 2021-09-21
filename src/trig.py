@@ -1,5 +1,4 @@
 from decimal import Decimal
-from typing import Callable
 import numpy as np
 
 
@@ -21,3 +20,7 @@ class ImpTrig:
     @staticmethod
     def cos(x: Decimal) -> Decimal:
         return _constructor(x, np.cos)
+
+    @staticmethod
+    def sin(x: Decimal) -> Decimal:
+        return _constructor(x, np.sin)

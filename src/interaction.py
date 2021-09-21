@@ -1,6 +1,6 @@
-import trig
-import utils
 from atom import Atom
+from trig import ImpTrig
+import utils
 import numpy as np
 from decimal import Decimal
 
@@ -42,7 +42,7 @@ class Interaction:
 
     def angle(self) -> Decimal:
         delta_x, delta_y = self.lin_diffs()
-        return trig.ImpTrig.atan
+        return ImpTrig.atan(delta_y / delta_x)
 
     def lj_energy(self) -> Decimal:
         # TODO: DECIMAL!
@@ -70,11 +70,13 @@ class Interaction:
 
     def delegate_force(self, *, v=False) -> None:
 
+        trig = ImpTrig()
+
         theta: Decimal = self.angle()
         magnitude: Decimal = self.lj_force()
 
-        i_component = Decimal(np.multiply(magnitude, Decimal(np.cos(theta))))
-        j_component = Decimal(np.multiply(magnitude, Decimal(np.sin(theta))))
+        i_component = Decimal(np.multiply(magnitude, Decimal(trig.cos(theta))))
+        j_component = Decimal(np.multiply(magnitude, Decimal(trig.sin(theta))))
 
         force = np.divide([i_component, j_component], 2)
         self.i.evaluate_next_state(force)

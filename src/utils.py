@@ -33,6 +33,6 @@ def coef_to_dec(coefficients: List[Decimal], x: Decimal) -> Decimal:
 
 
 def mylog(string: str, f: TextIO) -> None:
-    print(string)
+    print(string, end='')
     f.write(string)
 
