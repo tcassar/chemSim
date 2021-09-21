@@ -1,1 +1,1 @@
-Distance: 3.6056LJ Energy (J): -0.0018LJ Force (N): -0.0030Ar1 Vitals: Atom(s=[3.9996, 4.9994], v=[-0.0008, -0.0013])Ar2 Vitals: Atom(s=[6.0004, 8.0006], v=[0.0008, 0.0013])Distance: 3.6071LJ Energy (J): -0.0018LJ Force (N): -0.0030
+Distance: 3.6056LJ Energy (J): -0.0018LJ Force (N): -0.0030

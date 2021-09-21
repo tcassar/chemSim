@@ -1,5 +1,6 @@
 from atom import Atom
 from utils import *
+from trig import ImpTrig
 from decimal import Decimal
 from unittest import TestCase
 from random import randrange
@@ -104,14 +105,30 @@ class AtomTestCase(TestCase):
             p.evaluate_next_state(a)
 
 
-class UtilsTestCase(TestCase):
+class ImpTrigTestCase(TestCase):
+
+    def setUp(self) -> None:
+        self.trig = ImpTrig()
 
     def test_atan(self):
         pi = np.pi
-        rt3 = np.sqrt(Decimal(3))
+        rt3 = np.sqrt(3)
+
         exact_vals = [0, rt3 / 3, 1, rt3]
         results = [0, pi / 6, pi / 4, pi / 3]
 
         for val, result in zip(exact_vals, results):
             with self.subTest(exact_vals.index(val)):
-                self.assertEqual(inaccurate_atan(val), result)
+                self.assertEqual(self.trig.atan(val), result)
+
+    def test_cos(self):
+        pi = np.pi
+        rt3 = np.sqrt(3)
+        rt2 = np.sqrt(2)
+
+        results = [1, rt3/2, rt2/2, 1/2, 0]
+        exact_vals = [0, pi/6, pi/4, pi/3, pi/2]
+
+        for val, result in zip(exact_vals, results):
+            with self.subTest(exact_vals.index(val)):
+                self.assertAlmostEqual(float(self.trig.cos(val)), result)

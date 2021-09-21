@@ -36,8 +36,3 @@ def mylog(string: str, f: TextIO) -> None:
     print(string)
     f.write(string)
 
-
-def inaccurate_atan(theta: Decimal) -> Decimal:
-    """Dev only, too inaccurate and imprecise for final build"""
-    theta = float(f'{theta}')
-    return Decimal(np.arctan(theta))

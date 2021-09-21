@@ -1,3 +1,4 @@
+import trig
 import utils
 from atom import Atom
 import numpy as np
@@ -41,7 +42,7 @@ class Interaction:
 
     def angle(self) -> Decimal:
         delta_x, delta_y = self.lin_diffs()
-        return np.arctan(np.divide(delta_y, delta_x))
+        return trig.ImpTrig.atan
 
     def lj_energy(self) -> Decimal:
         # TODO: DECIMAL!
