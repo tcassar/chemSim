@@ -1,6 +1,6 @@
-from atom import Atom
-from trig import ImpTrig
-import utils
+from src.atom import Atom
+from src.trig import ImpTrig
+import src.utils as utils
 import numpy as np
 from decimal import Decimal
 
@@ -79,8 +79,8 @@ class Interaction:
         j_component = Decimal(np.multiply(magnitude, Decimal(trig.sin(theta))))
 
         force = np.divide([i_component, j_component], 2)
-        self.i.evaluate_next_state(force)
-        self.j.evaluate_next_state(np.multiply(force, -1))
+        self.i.evaluate_next_state(force * -1)
+        self.j.evaluate_next_state(force)
 
         if v:
             force_printable = f'{utils.dec_to_str(force[0])}, {utils.dec_to_str(force[1])}'

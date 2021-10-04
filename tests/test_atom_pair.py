@@ -1,6 +1,6 @@
-from atom import Atom
-from utils import *
-from trig import ImpTrig
+from src.atom import Atom
+from src.trig import ImpTrig
+from src.utils import *
 from decimal import Decimal
 from unittest import TestCase
 from random import randrange
@@ -106,6 +106,8 @@ class AtomTestCase(TestCase):
 
 
 class ImpTrigTestCase(TestCase):
+    # Redo trig tests to be:
+    #   Precise
 
     def setUp(self) -> None:
         self.trig = ImpTrig()
@@ -129,7 +131,6 @@ class ImpTrigTestCase(TestCase):
         self.exec_tests(calculated, results)
 
     def test_cos(self):
-        func = np.cos
 
         pi = np.pi
         rt3 = np.sqrt(3)
