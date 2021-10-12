@@ -15,18 +15,18 @@ class Atom:
         self.position = s
         self.force = np.array([0, 0])
 
-        # Default to reduced units
-
-        if not ru:
-            self.MASS: Decimal = Decimal('36')  # Daltons
-        else:
-            self.MASS: Decimal = Decimal('1')
+        self.set_constants(ru)
 
     def __repr__(self):
         decs = [*self.position, *self.velocity]
         floats = list(map(dec_to_str, decs))
         floats = list(map(float, floats))
         return f'Atom(s={floats[:2]}, v={floats[2:]})'
+
+    def set_constants(self, reduced_units: bool):
+        if reduced_units:
+            self.MASS = 1
+            self.R = 1
 
     def set_attrs(self, *, s: List[int], v: List[int]) -> None:
         """For testing, directly sets displacement and velocity"""

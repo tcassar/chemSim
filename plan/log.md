@@ -103,3 +103,63 @@ from the kinetic energy of each atom.
 That is, however, far later down the line in the project, and not included in my immediate plans for the future. Before
 my Mid-Project Review, I would like to accurately map the relationship between two atoms over time. From there, I will
 see how I think the project should progress.
+
+---
+# Mid Project Review
+
+## Final Title of Project
+Modelling the motion of a group of atoms due to the inter-atomic forces experienced between each pair of atoms, in Python.
+
+## Outline your progress since your initial meeting with your supervisor, including any obstacles you have overcome. 
+
+### Progress since initial review
+
+
+Over the summer, I did not progress as much as I would have liked. If I were to repeat the HELP Project, I would have
+tried to do more during the break. The main reason for this, I believe, is that I have never attempted a project as 
+large as this in a formal setting before. All other large projects that I have worked on have been done at my own pace 
+in my free time, and were nowhere near as rigorously documented as the HELP. Hence, I vastly underestimated how much 
+time I would require doing things such as build, each component of my system. This was especially true when writing 
+tests - something that I had not had much of a need to do before now. 
+
+Good tests, however, proved incredibly useful, and were the reason I was able to solve unexpected problems that arose
+with the simulation relatively quickly. The most obvious example of this happened soon into development. 
+
+## Problems
+
+To simulate continuous motion, from fixed force at an instant, I use SUVAT equations (i.e. assume constant acceleration).
+This assumption is good enough for small values (>1 femtosecond) **TEST**. To test the motion, I took a function
+
+---
+# DO THIS BIT
+start at v, s = 0
+a = t + 2
+=> v = 1/t^2 + t2 + 0
+=> s = 1/6t^3 + t^2
+
+and modelled it against
+calculating acceleration at a time T, and then using v = u+at to derive new velocity, s=ut+1/2at^2 for displacement
+
+I tested values at t=2^n, n = {0 < n < 10, n is integer}
+intended to do 100 frames of motion per increment of t as to be accurate enough,
+accidentally did same interval, but over much greater time -> a very large divergence, caught through testing
+
+---
+
+Another problem that I encountered was in keeping the simulation accurate. Doing so many calculations, very high
+precision is necessary, as rounding early will cause the calculated result to diverge from the true result quickly.
+Computers store floats, by default, using floating point binary - where a bit is defined to have a decimal point
+behind it, and everything to the left of the decimal point has the value of 2^-n. This means that floats are inherently
+imprecise, as it would require infinite bits to be able to accurately store a given value. 
+  The solution to this was to use a Python built-in module called `decimal`. `decimal.Decimal` objects encode
+floats accurately to n decimal places, and is the standard solution for programs that require a high level of precision.
+This did mean that the program is slower, and that I had to implement my own accurate trigonometric functions
+(arctan, cos, sin). This was due to an unexpected incompatibility with `numpy` and `decimal`.
+
+Having addressed this issue, I was able to run an integration test on my two atom, two dimension molecular dynamics sim.
+The motion of the atom was fully tested and working, and the program seemed precise enough to yield accurate results.
+Having run the first integration test, I encountered a very strange problem. The log file yielded the two atoms moving
+in the same direction. Upon further inspection, it seemed that the distance between the particles was staying constant,
+and hence the acceleration between particles was the same in every frame. This was quite obviously incorrect. The first
+thing that I thought was that I was missing a multiplier of -1 somewhere, and hence each atom was receiving an equal and
+identical force, as opposed to an equal and opposite force. I adjusted for this, and no change happened.

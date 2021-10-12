@@ -17,18 +17,19 @@ preserves precision, and ensures that over many cycles, the simulation remains a
   + Origin was resetting
   + Displacement is not reversible
   + Variable acceleration can be approximated for testing purposes:
+```python
+def approx_var(ticks):
+    v = lambda u, a, t: u + a*t
+    a = lambda t: 2*t
+    V = 0
+    for i in range(ticks):
+        V += v(0, a(i/ticks), 1/ticks)
+    return V
+
+for i in range(10):
+    print(f'10E{i} ticks: {approx_var(10**i)}')
+```
 ```pycon
->>> def approx_var(ticks):
-...     v = lambda u, a, t: u + a*t
-...     a = lambda t: 2*t
-...     V = 0
-...     for i in range(ticks):
-...         V += v(0, a(i/ticks), 1/ticks)
-...     return V
-
->>> for i in range(10):
-...     print(f'10E{i} ticks: {approx_var(10**i)}')
-
 10E0 ticks: 0.0
 10E1 ticks: 0.9000000000000001
 10E2 ticks: 0.9899999999999998

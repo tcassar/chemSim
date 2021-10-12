@@ -79,7 +79,7 @@ class Interaction:
         j_component = Decimal(np.multiply(magnitude, Decimal(trig.sin(theta))))
 
         force = np.divide([i_component, j_component], 2)
-        self.i.evaluate_next_state(force * -1)
+        self.i.evaluate_next_state(force)
         self.j.evaluate_next_state(force)
 
         if v:
