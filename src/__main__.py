@@ -1,6 +1,6 @@
 import src.atom as atom
-from v2.atom import Atom as onedAtom
-from v2.potential import Potential
+from one_dimension.atom import Atom as onedAtom
+from one_dimension.potential import Potential
 import src.interaction as interaction
 from src.utils import mylog
 import time

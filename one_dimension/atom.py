@@ -27,8 +27,12 @@ class Atom:
     def vitals(self):
         return self.displacement, self.velocity
 
-    def move(self, force: Decimal):
-        """Moves atom using current state, and force"""
+    def move(self, force: Decimal, time: Decimal):
+        """Moves atom using current state, and force
+        Args:
+            force: Decimal, force atom is experiencing
+            time: Decimal, time period till next frame
+        """
 
         # Define suvat equations
         def new_s(a: Decimal, u: Decimal, t: Decimal) -> Decimal:
@@ -50,7 +54,6 @@ class Atom:
         a = force / 1
 
         # Evaluate new state
-        time = Decimal('0.01')
         self.velocity = new_v(a, u, time)
         self.displacement = new_s(a, u, time) + s0
 
