@@ -9,7 +9,23 @@ class Potential:
         self.mol1 = mol1
         self.mol2 = mol2
 
-    def distance(self):
+    # ==== TIME ====
+
+    @staticmethod
+    def _eval_time(t: Decimal) -> Decimal:
+        """ For the moment keep this constant"""
+        return t if t else Decimal('0.01')
+
+    def set_time(self, t: Decimal):
+        """sets time to t"""
+        self._eval_time(t)
+
+    # ==== DISTANCE ====
+
+    def distance(self) -> Decimal:
+        """
+        Updates self.distance variable - done to mean that distance only calculated once per frame
+        """
         mol1, mol2 = self.mol1, self.mol2
         distance = Decimal(mol1.vitals()[0]) - Decimal(mol2.vitals()[0])
         if not distance:
@@ -18,6 +34,8 @@ class Potential:
             distance = distance
 
         return distance
+
+    # ==== MOTION ====
 
     def _lj_energy(self) -> Decimal:
         """
@@ -47,9 +65,14 @@ class Potential:
     def split_force(self, *, report=False) -> str:
         """ Delegates equal and opposite force to two atoms. Also detects collisions"""
         # TODO: Decouple this from Atom .move()
+
+        unit = Decimal(1)
+
+        t = self._eval_time(unit / 10 ** 2)
+
         force = self._lj_force()
-        self.mol1.move(force)
-        self.mol2.move(force * -1)
+        self.mol1.move(force, t)
+        self.mol2.move(force * -1, t)
 
         return self._report(self.distance, force, self._lj_energy()) if report else ''
 
