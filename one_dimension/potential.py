@@ -9,6 +9,8 @@ class Potential:
         self.mol1 = mol1
         self.mol2 = mol2
 
+        self.distance = self.eval_distance()
+
     # ==== TIME ====
 
     @staticmethod
@@ -22,7 +24,7 @@ class Potential:
 
     # ==== DISTANCE ====
 
-    def distance(self) -> Decimal:
+    def eval_distance(self) -> Decimal:
         """
         Updates self.distance variable - done to mean that distance only calculated once per frame
         """
@@ -33,6 +35,7 @@ class Potential:
         else:
             distance = distance
 
+        self.distance = distance
         return distance
 
     # ==== MOTION ====
@@ -43,7 +46,7 @@ class Potential:
         """
         epsilon = 1
         sigma = 1
-        r: Decimal = self.distance()
+        r: Decimal = self.distance
         x: Decimal = sigma / r
 
         repulsive = np.power(x, 12)
@@ -53,7 +56,7 @@ class Potential:
 
     def _lj_force(self) -> Decimal:
         """Calculate force by differentiating LJ Potential"""
-        r: Decimal = self.distance()
+        r: Decimal = self.distance
         e: Decimal = Decimal(1)
         s: Decimal = Decimal(1)
 
@@ -67,22 +70,22 @@ class Potential:
         # TODO: Decouple this from Atom .move()
 
         unit = Decimal(1)
-
         t = self._eval_time(unit / 10 ** 2)
+        self.distance = self.eval_distance()
 
         force = self._lj_force()
         self.mol1.move(force, t)
         self.mol2.move(force * -1, t)
 
-        return self._report(self.distance, force, self._lj_energy()) if report else ''
+        return self._report(force, self._lj_energy()) if report else ''
 
-    def _report(self, distance, force, energy):
+    def _report(self, force, energy):
 
         # TODO: Allow reporting from outside function i.e. turn into method
 
         """Debug output"""
 
-        out = f'\n======\nDistance: {distance()}\nEnergy: {energy}\nForce: {force}\n'
+        out = f'\n======\nDistance: {self.distance}\nEnergy: {energy}\nForce: {force}\n'
         out += f'Particle A: {self.mol1}\n'
         out += f'Particle B: {self.mol2}'
         out += '\n======'
