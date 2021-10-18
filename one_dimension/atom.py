@@ -1,32 +1,52 @@
 # Defines Atom class
 # Initialised with displacement and velocity
-# Moves given a force vector: TODO: vector class
+# Moves given a force vector: Scale: vector class
 
-
+from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
+from typing import List
 
 
 class Atom:
+    displacement: Decimal
+    velocity: Decimal
+    walls: List[Wall]
 
     def __init__(self, s, v):
+        # Scale displacement and velocity classes
         self.displacement: Decimal = s
         self.velocity: Decimal = v
-
-        # Set boundary at 50 - later implemented as two bounds at +- 50
-        # Wall assumed to have infinite mass
-        self.wall = 50
 
         for i in [s, v]:
             if type(i) != Decimal:
                 print(f'WARNING: Approximating {i} to Decimal')
 
     def __repr__(self):
-        return f'Atom(s={self.displacement}, v={self.velocity})'
+        return f'Atom(s={self.displacement:.4f}, v={self.velocity:.4f})'
 
-    def vitals(self):
-        return self.displacement, self.velocity
+    # Helper functions
+    def set_pos(self, s: Decimal) -> None:
+        """Set displacement from outside class"""
+        self.displacement = s
 
+    def get_pos(self) -> Decimal:
+        """Get displacement from outside class"""
+        return self.displacement
+
+    def set_v(self, v: Decimal) -> None:
+        """Set velocity from outside class"""
+        self.velocity = v
+
+    def get_v(self) -> Decimal:
+        """Get velocity from outside class"""
+        return self.velocity
+
+    def inject_to(self, container: Container):
+        """Associates atom with container"""
+        self.container = container
+
+    # Kinematics
     def move(self, force: Decimal, time: Decimal):
         """Moves atom using current state, and force
         Args:
@@ -35,6 +55,7 @@ class Atom:
         """
 
         # Define suvat equations
+        # noinspection PyPep8Naming
         def new_s(a: Decimal, u: Decimal, t: Decimal) -> Decimal:
             """s = ut + (1 / 2) *  a * t**2"""
             A = u * t
@@ -53,14 +74,11 @@ class Atom:
         # RU => mass = 1 => F=a
         a = force / 1
 
-        # Evaluate new state
+        # Evaluate new state, don't update displacement until after checking for wall collision
         self.velocity = new_v(a, u, time)
-        self.displacement = new_s(a, u, time) + s0
+        displacement = new_s(a, u, time) + s0
 
-        # Make particles bounce off walls - collisions elastic hence just invert velocity
-        if self.displacement > self.wall:
-            self.displacement = self.wall
-            self.velocity *= -1
-        elif self.displacement < -self.wall:
-            self.displacement = -self.wall
-            self.velocity *= -1
+        # Detect and handle collisions with walls
+        if self.container.out_of_bounds(displacement):
+
+

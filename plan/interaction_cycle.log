@@ -1,0 +1,80 @@
+===FRAME 0===
+Distance: 3.6056
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0004, 5.0006], v=[0.0008, 0.0013])
+Ar2 Vitals: Atom(s=[5.9996, 7.9994], v=[-0.0008, -0.0013])
+
+===FRAME 10000===
+Distance: 3.6040
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0017, 5.0025], v=[0.0017, 0.0025])
+Ar2 Vitals: Atom(s=[5.9983, 7.9975], v=[-0.0017, -0.0025])
+
+===FRAME 20000===
+Distance: 3.5995
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0038, 5.0057], v=[0.0025, 0.0038])
+Ar2 Vitals: Atom(s=[5.9962, 7.9943], v=[-0.0025, -0.0038])
+
+===FRAME 30000===
+Distance: 3.5919
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0067, 5.0101], v=[0.0034, 0.005])
+Ar2 Vitals: Atom(s=[5.9933, 7.9899], v=[-0.0034, -0.005])
+
+===FRAME 40000===
+Distance: 3.5813
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0105, 5.0157], v=[0.0042, 0.0063])
+Ar2 Vitals: Atom(s=[5.9895, 7.9843], v=[-0.0042, -0.0063])
+
+===FRAME 50000===
+Distance: 3.5677
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0151, 5.0227], v=[0.005, 0.0076])
+Ar2 Vitals: Atom(s=[5.9849, 7.9773], v=[-0.005, -0.0076])
+
+===FRAME 60000===
+Distance: 3.5511
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0206, 5.0309], v=[0.0059, 0.0088])
+Ar2 Vitals: Atom(s=[5.9794, 7.9691], v=[-0.0059, -0.0088])
+
+===FRAME 70000===
+Distance: 3.5314
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.0269, 5.0403], v=[0.0067, 0.0101])
+Ar2 Vitals: Atom(s=[5.9731, 7.9597], v=[-0.0067, -0.0101])
+
+===FRAME 80000===
+Distance: 3.5087
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.034, 5.051], v=[0.0076, 0.0113])
+Ar2 Vitals: Atom(s=[5.966, 7.949], v=[-0.0076, -0.0113])
+
+===FRAME 90000===
+Distance: 3.4830
+LJ Energy (J): -0.0018
+LJ Force (N): -0.0030
+
+Ar1 Vitals: Atom(s=[4.042, 5.063], v=[0.0084, 0.0126])
+Ar2 Vitals: Atom(s=[5.958, 7.937], v=[-0.0084, -0.0126])
+

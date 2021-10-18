@@ -25,11 +25,12 @@ class Potential:
     # ==== DISTANCE ====
 
     def eval_distance(self) -> Decimal:
+        # Scale through defining type for v and s, allowing arithmetic between types
         """
         Updates self.distance variable - done to mean that distance only calculated once per frame
         """
         mol1, mol2 = self.mol1, self.mol2
-        distance = Decimal(mol1.vitals()[0]) - Decimal(mol2.vitals()[0])
+        distance = Decimal(mol1.get_pos()) - Decimal(mol2.get_pos())
         if not distance:
             distance = Decimal(10 ** -4)
         else:
@@ -65,27 +66,60 @@ class Potential:
 
         return a * b
 
+    # ==== COLLISION HANDLING ====
+    # i.e. how to deal with a collision AFTER detection BETWEEN PARTICLES
+    # Potential is not concerned with collisions with sides of containers, that is handled by Atom class
+
+    def _mols_collision(self) -> str:
+        """
+        Corrects particles in case of collision. This is a collision, will not theoretically happen but may here due to
+        approx of var acceleration.
+
+        Swap positions, elastic collision, particles of same mass => velocity *= -1.
+        """
+
+        # Scale; check maths
+
+        # unpack molecules to local scope
+        mol1, mol2 = self.mol1, self.mol2
+
+        # Invert Velocities, elastic collisions
+        v1, v2 = mol1.get_v(), mol2.get_v()
+        mol1.set_v(v1 * -1)
+        mol2.set_v(v2 * -1)
+
+        # Swap positions
+        s1, s2 = mol2.get_pos(), mol1.get_pos()
+        mol1.set_pos(s1)
+        mol2.set_pos(s2)
+
+        # Note: order irrelevant as calculated in next frame, not real time
+
+        return f'Moved Ar1 from {s2:.4f} to {s1:.4f}, and Ar2 from {s1:.4f} to {s2:.4f}'
+
     def split_force(self, *, report=False) -> str:
         """ Delegates equal and opposite force to two atoms. Also detects collisions"""
-        # TODO: Decouple this from Atom .move()
 
         unit = Decimal(1)
         t = self._eval_time(unit / 10 ** 2)
-        self.distance = self.eval_distance()
+
+        # Update distance, adjust in case of collision
+        r = self.eval_distance()
+        self.distance = r
+
+        if r <= 0:
+            self._mols_collision()
 
         force = self._lj_force()
         self.mol1.move(force, t)
         self.mol2.move(force * -1, t)
 
-        return self._report(force, self._lj_energy()) if report else ''
+        return self._report(force, self._lj_energy()) if report else f'{self.distance:.4f}'
 
     def _report(self, force, energy):
-
-        # TODO: Allow reporting from outside function i.e. turn into method
-
         """Debug output"""
 
-        out = f'\n======\nDistance: {self.distance}\nEnergy: {energy}\nForce: {force}\n'
+        out = f'\n======\nDistance: {self.distance:.4f}\nEnergy: {energy:.4f}\nForce: {force:.4f}\n'
         out += f'Particle A: {self.mol1}\n'
         out += f'Particle B: {self.mol2}'
         out += '\n======'

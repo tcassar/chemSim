@@ -1,4 +1,1 @@
-mpmath==1.2.1
-numpy==1.21.1
-pygame==2.0.1
-sympy==1.8
+
