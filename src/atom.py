@@ -1,75 +1,92 @@
-from src.utils import *
+# Defines Atom class
+# Initialised with displacement and velocity
+# Moves given a force vector: Scale: vector class
+
+from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
+from typing import List
 
 
 class Atom:
+    displacement: Decimal
+    velocity: Decimal
+    walls: List[Wall]
 
-    def __init__(self, s=None, v=None, ru=True):
-        if s is None:
-            s = [0, 0]
-        if v is None:
-            v = [0, 0]
+    def __init__(self, s, v):
+        # Scale displacement and velocity classes
+        self.displacement: Decimal = s
+        self.velocity: Decimal = v
 
-        self.velocity = v
-        self.position = s
-        self.force = np.array([0, 0])
+        self.contained = False
 
-        self.set_constants(ru)
+        for i in [s, v]:
+            if type(i) != Decimal:
+                print(f'WARNING: Approximating {i} to Decimal')
 
     def __repr__(self):
-        decs = [*self.position, *self.velocity]
-        floats = list(map(dec_to_str, decs))
-        floats = list(map(float, floats))
-        return f'Atom(s={floats[:2]}, v={floats[2:]})'
+        return f'Atom(s={self.displacement:.4f}, v={self.velocity:.4f})'
 
-    def set_constants(self, reduced_units: bool):
-        if reduced_units:
-            self.MASS = 1
-            self.R = 1
+    # Helper functions
+    def set_pos(self, s: Decimal) -> None:
+        """Set displacement from outside class"""
+        self.displacement = s
 
-    def set_attrs(self, *, s: List[int], v: List[int]) -> None:
-        """For testing, directly sets displacement and velocity"""
+    def get_pos(self) -> Decimal:
+        """Get displacement from outside class"""
+        return self.displacement
 
-        s, v = intlist_to_dec(s), intlist_to_dec(v)
-
+    def set_v(self, v: Decimal) -> None:
+        """Set velocity from outside class"""
         self.velocity = v
-        self.position = s
 
-    def vitals(self, *, s=True, v=True, read=False) -> List[List[Decimal]]:
-        """returns s and/or v in list form (only returns what is asked)"""
-        # TODO: Fix output format to list
-        s, v = list(self.position), list(self.velocity)
+    def get_v(self) -> Decimal:
+        """Get velocity from outside class"""
+        return self.velocity
 
-        out = [s, v]
-        if not v:
-            out = s
-        if not s:
-            out = v
+    def inject_to(self, container: Container):
+        """Associates atom with container"""
+        self.container = container
+        self.contained = True
 
-        return out if s or v else []
+    # Kinematics
+    def move(self, force: Decimal, time: Decimal):
+        """Moves atom using current state, and force
+        Args:
+            force: Decimal, force atom is experiencing
+            time: Decimal, time period till next frame
+        """
 
-    def evaluate_next_state(self, force: List[Decimal]) -> None:
-        """Evaluates next state based off previous state using SUVAT"""
-        a = np.divide(force, self.MASS)
+        # Define suvat equations
+        # noinspection PyPep8Naming
+        def new_s(a: Decimal, u: Decimal, t: Decimal) -> Decimal:
+            """s = ut + (1 / 2) *  a * t**2"""
+            A = u * t
+            B = (Decimal('0.5')) * a * t ** 2
 
-        sn: List[Decimal]
-        vn: List[Decimal]
-        sn, vn = self.vitals()
-        t = Decimal(1)
+            return np.add(A, B)
 
-        # v = u + at, t = 1
-        self.velocity = np.add(vn, np.multiply(a, t))
+        def new_v(a: Decimal, u: Decimal, t: Decimal):
+            return np.add(u, np.multiply(a, t))
 
-        # s = ut + 1/2 a * t**2, t = 1
-        self.position += np.add(np.multiply(vn, t), np.divide(np.multiply(a, t ** 2), 2))
+        # Retrieve current state
+        u = self.velocity
+        s0 = self.displacement
 
-    def limit(self, force_eq: List, subpoints: int, point: int):
+        # Calculate acceleration from F=ma
+        # RU => mass = 1 => F=a
+        a = force / 1
 
-        for subpoint in range(subpoints):
-            subpoint = Decimal(subpoint)
-            t = np.add(point,
-                       np.divide(subpoint, subpoints))
-            print(f't: {t!r}')
-            force = coef_to_dec(force_eq, t)
-            self.evaluate_next_state([force, 0])
+        # Evaluate new state, don't update displacement until after checking for wall collision
+        self.velocity = new_v(a, u, time)
+        self.displacement = new_s(a, u, time) + s0
+
+        # Detect and handle collisions with walls
+        if self.contained:
+            if collided := self.container.out_of_bounds(self.displacement):
+                self.velocity = Decimal(0)
+                self.displacement = collided
+                print("Collided")
+
+
+
