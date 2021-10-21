@@ -5,13 +5,12 @@
 from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
-from typing import List
 
 
 class Atom:
     displacement: Decimal
     velocity: Decimal
-    walls: List[Wall]
+    walls: list[Wall]
 
     def __init__(self, s, v):
         # Scale displacement and velocity classes
@@ -25,7 +24,15 @@ class Atom:
                 print(f'WARNING: Approximating {i} to Decimal')
 
     def __repr__(self):
+        return f'Atom(s={self.displacement}, v={self.velocity})'
+
+    def __str__(self):
         return f'Atom(s={self.displacement:.4f}, v={self.velocity:.4f})'
+
+    def __bytes__(self):
+        """Creates a bytes representation of an object"""
+        st = repr(self)
+        return bytes(st, 'utf-8')
 
     # Helper functions
     def set_pos(self, s: Decimal) -> None:

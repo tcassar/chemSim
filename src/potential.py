@@ -1,6 +1,7 @@
 from atom import Atom
 from decimal import Decimal
 import numpy as np
+import xxhash
 
 
 class Potential:
@@ -10,6 +11,16 @@ class Potential:
         self.mol2 = mol2
 
         self.distance = self.eval_distance()
+
+    def ___hash__(self) -> str:
+        x = xxhash.xxh32()
+        x.update(bytes(self.mol1))
+        x.update(bytes(self.mol2))
+
+        return x.hexdigest()
+
+    def __del__(self):
+        pass
 
     # ==== TIME ====
 
