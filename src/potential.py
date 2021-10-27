@@ -12,12 +12,12 @@ class Potential:
 
         self.distance = self.eval_distance()
 
-    def ___hash__(self) -> str:
+    def __hash__(self) -> int:
         x = xxhash.xxh32()
         x.update(bytes(self.mol1))
         x.update(bytes(self.mol2))
 
-        return x.hexdigest()
+        return x.intdigest()
 
     def __del__(self):
         pass
@@ -128,7 +128,7 @@ class Potential:
         return self._report(force, self._lj_energy()) if report else f'{self.distance:.4f}'
 
     def _report(self, force, energy):
-        """Debug output"""
+        """Debug output""" 
 
         out = f'\n======\nDistance: {self.distance:.4f}\nEnergy: {energy:.4f}\nForce: {force:.4f}\n'
         out += f'Particle A: {self.mol1}\n'

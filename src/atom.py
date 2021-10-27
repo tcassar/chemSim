@@ -1,6 +1,7 @@
 # Defines Atom class
 # Initialised with displacement and velocity
 # Moves given a force vector: Scale: vector class
+import xxhash
 
 from environment import Container, Wall
 from decimal import Decimal
@@ -12,8 +13,13 @@ class Atom:
     velocity: Decimal
     walls: list[Wall]
 
-    def __init__(self, s, v):
+    # noinspection PyPep8Naming
+    def __init__(self, s, v, *, ID=0):
         # Scale displacement and velocity classes
+
+        self.container: Container
+        self.ID = ID
+
         self.displacement: Decimal = s
         self.velocity: Decimal = v
 
@@ -30,9 +36,19 @@ class Atom:
         return f'Atom(s={self.displacement:.4f}, v={self.velocity:.4f})'
 
     def __bytes__(self):
-        """Creates a bytes representation of an object"""
-        st = repr(self)
-        return bytes(st, 'utf-8')
+        """Creates a bytes representation of atom. Gives hash of ID for labelled atoms, ow hash of pos and vel
+        Assigned atoms are preferred"""
+        if self.ID:
+            byte_repr = bytes(self.ID)
+        else:
+            byte_repr = bytes(f'{self!r}')
+
+        return byte_repr
+
+    def __hash__(self):
+        """Outputs hash based off our ID / pos and vel"""
+        x = xxhash.xxh32()
+        x.update(bytes(self))
 
     # Helper functions
     def set_pos(self, s: Decimal) -> None:
@@ -94,6 +110,3 @@ class Atom:
                 self.velocity = Decimal(0)
                 self.displacement = collided
                 print("Collided")
-
-
-

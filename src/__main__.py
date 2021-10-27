@@ -1,5 +1,3 @@
-import decimal
-
 from atom import Atom
 from environment import Container
 from potential import Potential
