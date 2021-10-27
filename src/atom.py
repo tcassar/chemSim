@@ -67,6 +67,9 @@ class Atom:
         """Get velocity from outside class"""
         return self.velocity
 
+    def get_ID(self) -> str:
+        return f'{self.ID}'
+
     def inject_to(self, container: Container):
         """Associates atom with container"""
         self.container = container
