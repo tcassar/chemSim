@@ -51,9 +51,9 @@ class Potential:
         Updates self.distance variable - done to mean that distance only calculated once per frame
         """
         mol1, mol2 = self.mol1, self.mol2
-        distance = Decimal(mol1.get_pos()) - Decimal(mol2.get_pos())
+        distance = abs(Decimal(mol1.get_pos()) - Decimal(mol2.get_pos()))
         if not distance:
-            distance = Decimal(10 ** -4)
+            distance = Decimal('10') ** -4
         else:
             distance = distance
 

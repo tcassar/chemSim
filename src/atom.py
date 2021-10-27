@@ -7,7 +7,6 @@ from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
 
-from src.environment import Container
 
 
 class Atom:
