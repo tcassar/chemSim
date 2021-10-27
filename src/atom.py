@@ -7,8 +7,11 @@ from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
 
+from src.environment import Container
+
 
 class Atom:
+    container: Container
     displacement: Decimal
     velocity: Decimal
     walls: list[Wall]
@@ -24,6 +27,7 @@ class Atom:
         self.velocity: Decimal = v
 
         self.contained = False
+        self.experiencing_force: Decimal = Decimal(0)
 
         for i in [s, v]:
             if type(i) != Decimal:
@@ -33,7 +37,7 @@ class Atom:
         return f'Atom(s={self.displacement}, v={self.velocity})'
 
     def __str__(self):
-        return f'Atom(s={self.displacement:.4f}, v={self.velocity:.4f})'
+        return f'Atom{self.ID}'
 
     def __bytes__(self):
         """Creates a bytes representation of atom. Gives hash of ID for labelled atoms, ow hash of pos and vel
@@ -76,12 +80,20 @@ class Atom:
         self.contained = True
 
     # Kinematics
-    def move(self, force: Decimal, time: Decimal):
+
+    def accumulate_force(self, force: Decimal):
+        """"""
+        self.experiencing_force += force
+
+    def move(self, time: Decimal):
         """Moves atom using current state, and force
         Args:
-            force: Decimal, force atom is experiencing
             time: Decimal, time period till next frame
         """
+
+        # Pull force that atom is experiencing
+        force: Decimal = self.experiencing_force
+        self.experiencing_force = 0
 
         # Define suvat equations
         # noinspection PyPep8Naming
@@ -110,6 +122,6 @@ class Atom:
         # Detect and handle collisions with walls
         if self.contained:
             if collided := self.container.out_of_bounds(self.displacement):
-                self.velocity = Decimal(0)
+                self.velocity *= Decimal('-0.0001')  # FIXME: coef is absolute bollocks
                 self.displacement = collided
-                print("Collided")
+                print(f'{self} collided with wall')

@@ -7,6 +7,7 @@ import xxhash
 class Potential:
 
     def __init__(self, mol1: Atom, mol2: Atom):
+        # TODO: log on creation
         self.mol1 = mol1
         self.mol2 = mol2
 
@@ -19,7 +20,16 @@ class Potential:
 
         return x.intdigest()
 
+    def __str__(self):
+        mol1 = self.mol1
+        mol2 = self.mol2
+        if mol1.get_pos() > mol2.get_pos():
+            mol1, mol2 = mol2, mol1
+        return f'Atom{mol1.get_ID()} {mol1.get_pos():.4f}...[{self.distance:.4f}]' \
+               f'...Atom{mol2.get_ID()} {mol2.get_pos():.4f}'
+
     def __del__(self):
+        # TODO: Log on destruction
         pass
 
     # ==== TIME ====
@@ -56,6 +66,7 @@ class Potential:
         """
         Calculate energy from Lennard Jones Potential
         """
+        # TODO: Log when calculated
         epsilon = 1
         sigma = 1
         r: Decimal = self.distance
@@ -68,6 +79,7 @@ class Potential:
 
     def _lj_force(self) -> Decimal:
         """Calculate force by differentiating LJ Potential"""
+        # TODO: Log when calculated
         r: Decimal = self.distance
         e: Decimal = Decimal(1)
         s: Decimal = Decimal(1)
@@ -89,7 +101,7 @@ class Potential:
         Swap positions, elastic collision, particles of same mass => velocity *= -1.
         """
 
-        # Scale; check maths
+        # Scale: check maths
 
         # unpack molecules to local scope
         mol1, mol2 = self.mol1, self.mol2
@@ -106,6 +118,8 @@ class Potential:
 
         # Note: order irrelevant as calculated in next frame, not real time
 
+
+        # TODO: Log this output
         return f'Moved Ar1 from {s2:.4f} to {s1:.4f}, and Ar2 from {s1:.4f} to {s2:.4f}'
 
     def split_force(self, *, report=False) -> str:
@@ -122,8 +136,8 @@ class Potential:
             self._mols_collision()
 
         force = self._lj_force()
-        self.mol1.move(force, t)
-        self.mol2.move(force * -1, t)
+        self.mol1.accumulate_force(force)
+        self.mol2.accumulate_force(force*-1)
 
         return self._report(force, self._lj_energy()) if report else f'{self.distance:.4f}'
 
