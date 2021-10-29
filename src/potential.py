@@ -118,7 +118,6 @@ class Potential:
 
         # Note: order irrelevant as calculated in next frame, not real time
 
-
         # TODO: Log this output
         return f'Moved Ar1 from {s2:.4f} to {s1:.4f}, and Ar2 from {s1:.4f} to {s2:.4f}'
 
