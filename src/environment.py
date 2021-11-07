@@ -31,7 +31,6 @@ class Container:
         """If molecule is out of bounds, return a correction.
         If missed lower bound, returns 1. If upper, returns -1. If neither, returns new position for atom"""
         lower, *_, upper = self.walls  # *_ is redundant as will always be len(2), just makes clear
-        adjustment = 0
 
         if atom_pos < lower.pos:
             adjustment = lower.pos + res

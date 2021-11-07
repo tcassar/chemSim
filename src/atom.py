@@ -8,7 +8,6 @@ from decimal import Decimal
 import numpy as np
 
 
-
 class Atom:
     container: Container
     displacement: Decimal
@@ -20,7 +19,8 @@ class Atom:
         # Scale displacement and velocity classes
 
         self.container: Container
-        self.ID = ID
+        assert ID < 1000 and type(ID) == int
+        self.ID = str(ID).zfill(3)
 
         self.displacement: Decimal = s
         self.velocity: Decimal = v
@@ -37,21 +37,21 @@ class Atom:
 
     def __str__(self):
         return f'Atom{self.ID}'
-
-    def __bytes__(self):
-        """Creates a bytes representation of atom. Gives hash of ID for labelled atoms, ow hash of pos and vel
-        Assigned atoms are preferred"""
-        if self.ID:
-            byte_repr = bytes(self.ID)
-        else:
-            byte_repr = bytes(f'{self!r}')
-
-        return byte_repr
-
-    def __hash__(self):
-        """Outputs hash based off our ID / pos and vel"""
-        x = xxhash.xxh32()
-        x.update(bytes(self))
+    #
+    # def __bytes__(self):
+    #     """Creates a bytes representation of atom. Gives hash of ID for labelled atoms, ow hash of pos and vel
+    #     Assigned atoms are preferred"""
+    #     if self.ID:
+    #         byte_repr = bytes(self.ID)
+    #     else:
+    #         byte_repr = bytes(f'{self!r}')
+    #
+    #     return byte_repr
+    #
+    # def __hash__(self):
+    #     """Outputs hash based off our ID / pos and vel"""
+    #     x = xxhash.xxh32()
+    #     x.update(bytes(self))
 
     # Helper functions
     def set_pos(self, s: Decimal) -> None:

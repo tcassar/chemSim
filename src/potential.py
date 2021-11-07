@@ -14,10 +14,9 @@ class Potential:
         self.distance = self.eval_distance()
 
     def __hash__(self) -> int:
+        """Potential's hash is built from concatenating mol IDs"""
         x = xxhash.xxh32()
-        x.update(bytes(self.mol1))
-        x.update(bytes(self.mol2))
-
+        x.update(bytes(f'{self.mol1.ID}{self.mol2.ID}'))
         return x.intdigest()
 
     def __str__(self):
