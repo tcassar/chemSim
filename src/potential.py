@@ -1,4 +1,4 @@
-from atom import Atom
+from src.atom import Atom
 from decimal import Decimal
 import numpy as np
 import xxhash
@@ -6,22 +6,25 @@ import xxhash
 
 class Potential:
 
-    def __init__(self, mol1: Atom, mol2: Atom):
+    def __init__(self, atom1: Atom, atom2: Atom):
         # TODO: log on creation
-        self.mol1 = mol1
-        self.mol2 = mol2
+        self.atom1 = atom1
+        self.atom2 = atom2
+
+        self.epsilon: Decimal = Decimal('125.7')  # K
+        self.sigma: Decimal = Decimal('0.3345')  # nm
 
         self.distance = self.eval_distance()
 
     def __hash__(self) -> int:
         """Potential's hash is built from concatenating mol IDs"""
         x = xxhash.xxh32()
-        x.update(bytes(f'{self.mol1.ID}{self.mol2.ID}'))
+        x.update(bytes(f'{self.atom1.ID}{self.atom2.ID}'))
         return x.intdigest()
 
     def __str__(self):
-        mol1 = self.mol1
-        mol2 = self.mol2
+        mol1 = self.atom1
+        mol2 = self.atom2
         if mol1.get_pos() > mol2.get_pos():
             mol1, mol2 = mol2, mol1
         return f'Atom{mol1.get_ID()} {mol1.get_pos():.4f}...[{self.distance:.4f}]' \
@@ -49,7 +52,7 @@ class Potential:
         """
         Updates self.distance variable - done to mean that distance only calculated once per frame
         """
-        mol1, mol2 = self.mol1, self.mol2
+        mol1, mol2 = self.atom1, self.atom2
         distance = abs(Decimal(mol1.get_pos()) - Decimal(mol2.get_pos()))
         if not distance:
             distance = Decimal('10') ** -4
@@ -66,8 +69,8 @@ class Potential:
         Calculate energy from Lennard Jones Potential
         """
         # TODO: Log when calculated
-        epsilon = 1
-        sigma = 1
+        epsilon = self.epsilon
+        sigma = self.sigma
         r: Decimal = self.distance
         x: Decimal = sigma / r
 
@@ -80,8 +83,8 @@ class Potential:
         """Calculate force by differentiating LJ Potential"""
         # TODO: Log when calculated
         r: Decimal = self.distance
-        e: Decimal = Decimal('1.1')
-        s: Decimal = Decimal('1')
+        e = self.epsilon
+        s = self.sigma
 
         a = Decimal((24 * e * np.power(s, 6)) * np.power(r, -7))
         b = Decimal((2 * np.power(s, 6)) * np.power(r, -6) - 1)
@@ -103,7 +106,7 @@ class Potential:
         # Scale: check maths
 
         # unpack molecules to local scope
-        mol1, mol2 = self.mol1, self.mol2
+        mol1, mol2 = self.atom1, self.atom2
 
         # Invert Velocities, elastic collisions
         v1, v2 = mol1.get_v(), mol2.get_v()
@@ -120,11 +123,8 @@ class Potential:
         # TODO: Log this output
         return f'Moved Ar1 from {s2:.4f} to {s1:.4f}, and Ar2 from {s1:.4f} to {s2:.4f}'
 
-    def split_force(self, *, report=False) -> Decimal:
+    def split_force(self):
         """ Delegates equal and opposite force to two atoms. Also detects collisions"""
-
-        unit = Decimal(1)
-        t = self._eval_time(unit / 10 ** 2)
 
         # Update distance, adjust in case of collision
         r = self.eval_distance()
@@ -134,17 +134,19 @@ class Potential:
             self._mols_collision()
 
         force = self._lj_force()
-        self.mol1.accumulate_force(force)
-        self.mol2.accumulate_force(force*-1)
+        self.atom1.accumulate_force(force)
+        self.atom2.accumulate_force(force * -1)
 
         return r
 
-    def _report(self, force, energy):
+    def report(self):
         """Debug output""" 
 
-        out = f'\n======\nDistance: {self.distance:.4f}\nEnergy: {energy:.4f}\nForce: {force:.4f}\n'
-        out += f'Particle A: {self.mol1}\n'
-        out += f'Particle B: {self.mol2}'
+        energy = self._lj_energy()
+        force = self._lj_force()
+        out = f'\n======\nDistance: {self.distance:.4f}nm\nEnergy: {energy:.4f}K\nForce: {force:.4f}\n'
+        out += f'Particle A: {self.atom1}\n'
+        out += f'Particle B: {self.atom2}'
         out += '\n======'
 
         return out

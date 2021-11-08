@@ -3,6 +3,8 @@ from environment import Container
 from potential import Potential
 from decimal import Decimal
 
+import cycles
+
 
 def compute_frame(atoms: list[Atom], resolution: Decimal):
     for atom in atoms:
@@ -71,15 +73,15 @@ def pairwise_cycle_test():
 
     # Initialise atoms, assign to a container
 
-    atoms = [Atom(Decimal('-0.5'), 0, ID=1), Atom(Decimal('0.5'), 0)]
+    atoms = [Atom(Decimal('-0.25'), 0, ID=1), Atom(Decimal('0.25'), 0)]
 
     walls = [Decimal(-10.1), Decimal(10.1)]
     ctr = Container(walls)
     for atom in atoms:
         atom.inject_to(ctr)
 
-    ctr.pairwise_cycle()
+    return cycles.pairwise_cycle(ctr)
 
 
 if __name__ == '__main__':
-    pairwise_cycle_test()
+    print(pairwise_cycle_test())
