@@ -3,22 +3,19 @@
 # Moves given a force vector: Scale: vector class
 import xxhash
 
-from environment import Container, Wall
 from decimal import Decimal
 import numpy as np
 
 
 class Atom:
-    container: Container
     displacement: Decimal
     velocity: Decimal
-    walls: list[Wall]
+    walls: list
 
     # noinspection PyPep8Naming
     def __init__(self, s, v, *, ID=0):
         # Scale displacement and velocity classes
 
-        self.container: Container
         assert ID < 1000 and type(ID) == int
         self.ID = str(ID).zfill(3)
 
@@ -73,10 +70,11 @@ class Atom:
     def get_ID(self) -> str:
         return f'{self.ID}'
 
-    def inject_to(self, container: Container):
+    def inject_to(self, container):
         """Associates atom with container"""
         self.container = container
         self.contained = True
+        container.contained_atoms.append(self)
 
     # Kinematics
 
@@ -84,10 +82,11 @@ class Atom:
         """"""
         self.experiencing_force += force
 
-    def move(self, time: Decimal):
+    def move(self, time: Decimal) -> Decimal:
         """Moves atom using current state, and force
         Args:
             time: Decimal, time period till next frame
+        return: New displacement
         """
 
         # Pull force that atom is experiencing
@@ -98,13 +97,13 @@ class Atom:
         # noinspection PyPep8Naming
         def new_s(a: Decimal, u: Decimal, t: Decimal) -> Decimal:
             """s = ut + (1 / 2) *  a * t**2"""
-            A = u * t
-            B = (Decimal('0.5')) * a * t ** 2
+            A: Decimal = u * t
+            B: Decimal = (Decimal('0.5')) * a * t ** 2
 
             return np.add(A, B)
 
         def new_v(a: Decimal, u: Decimal, t: Decimal):
-            return np.add(u, np.multiply(a, t))
+            return np.add(u, np.multiply(Decimal(a), Decimal(t)))
 
         # Retrieve current state
         u = self.velocity
@@ -121,6 +120,8 @@ class Atom:
         # Detect and handle collisions with walls
         if self.contained:
             if collided := self.container.out_of_bounds(self.displacement):
-                self.velocity *= Decimal('-0.0001')  # FIXME: coef is absolute bollocks
+                self.velocity *= Decimal('-0.00001')  # FIXME: coef is absolute bollocks
                 self.displacement = collided
                 print(f'{self} collided with wall')
+
+        return self.displacement

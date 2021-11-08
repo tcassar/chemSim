@@ -80,8 +80,8 @@ class Potential:
         """Calculate force by differentiating LJ Potential"""
         # TODO: Log when calculated
         r: Decimal = self.distance
-        e: Decimal = Decimal(1)
-        s: Decimal = Decimal(1)
+        e: Decimal = Decimal('1.1')
+        s: Decimal = Decimal('1')
 
         a = Decimal((24 * e * np.power(s, 6)) * np.power(r, -7))
         b = Decimal((2 * np.power(s, 6)) * np.power(r, -6) - 1)
@@ -120,7 +120,7 @@ class Potential:
         # TODO: Log this output
         return f'Moved Ar1 from {s2:.4f} to {s1:.4f}, and Ar2 from {s1:.4f} to {s2:.4f}'
 
-    def split_force(self, *, report=False) -> str:
+    def split_force(self, *, report=False) -> Decimal:
         """ Delegates equal and opposite force to two atoms. Also detects collisions"""
 
         unit = Decimal(1)
@@ -137,7 +137,7 @@ class Potential:
         self.mol1.accumulate_force(force)
         self.mol2.accumulate_force(force*-1)
 
-        return self._report(force, self._lj_energy()) if report else f'{self.distance:.4f}'
+        return r
 
     def _report(self, force, energy):
         """Debug output""" 

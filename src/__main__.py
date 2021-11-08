@@ -9,7 +9,7 @@ def compute_frame(atoms: list[Atom], resolution: Decimal):
         atom.move(resolution)
 
 
-def two_atm():
+def two_atm_init():
     ar1, ar2 = Atom(Decimal('0.25'), 0, ID=1), Atom(Decimal('-0.25'), 0, ID=2)
     intr = Potential(ar1, ar2)
 
@@ -19,14 +19,17 @@ def two_atm():
     ar2.inject_to(ctr)
 
     print(ar1, ar2)
+    return intr, ar1, ar2
 
+def two_atom_uncontained():
+    intr, *atoms = two_atm_init()
     log_frames = 8
 
     while True:
         for i in range(10 ** log_frames):
             if not i % 10 ** (log_frames - 2):
                 intr.split_force()
-                compute_frame([ar1, ar2], Decimal(0.001))
+                compute_frame(atoms, Decimal('0.001'))
                 print(intr)
 
 
@@ -64,5 +67,19 @@ def three_atom():
                 print(*intrs)
 
 
+def pairwise_cycle_test():
+
+    # Initialise atoms, assign to a container
+
+    atoms = [Atom(Decimal('-0.5'), 0, ID=1), Atom(Decimal('0.5'), 0)]
+
+    walls = [Decimal(-10.1), Decimal(10.1)]
+    ctr = Container(walls)
+    for atom in atoms:
+        atom.inject_to(ctr)
+
+    ctr.pairwise_cycle()
+
+
 if __name__ == '__main__':
-    three_atom()
+    pairwise_cycle_test()
