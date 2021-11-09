@@ -80,7 +80,7 @@ class Potential:
         return 4 * epsilon * (repulsive - attractive)
 
     def _lj_force(self) -> Decimal:
-        """Calculate force by differentiating LJ Potential"""
+        """Calculate force by differentiating LJ Potential, units of J per nm"""
         # TODO: Log when calculated
         r: Decimal = self.distance
         e = self.epsilon

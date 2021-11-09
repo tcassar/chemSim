@@ -1,7 +1,6 @@
 # Defines Atom class
 # Initialised with displacement and velocity
 # Moves given a force vector: Scale: vector class
-import xxhash
 
 from decimal import Decimal
 import numpy as np
@@ -24,6 +23,8 @@ class Atom:
 
         self.contained = False
         self.experiencing_force: Decimal = Decimal(0)
+
+        self.mass = Decimal('39.948')  # u (i.e. 1.6605 * 10**-27)
 
         for i in [s, v]:
             if type(i) != Decimal:
@@ -83,14 +84,14 @@ class Atom:
         self.experiencing_force += force
 
     def move(self, time: Decimal) -> Decimal:
-        """Moves atom using current state, and force
+        """Moves atom using current state, and acceleration
         Args:
             time: Decimal, time period till next frame
         return: New displacement
         """
 
-        # Pull force that atom is experiencing
-        force: Decimal = self.experiencing_force
+        # Pull acceleration that atom is experiencing
+        a: Decimal = self.experiencing_force / self.mass  #
         self.experiencing_force = 0
 
         # Define suvat equations
@@ -109,9 +110,6 @@ class Atom:
         u = self.velocity
         s0 = self.displacement
 
-        # Calculate acceleration from F=ma
-        # RU => mass = 1 => F=a
-        a = force / 1
 
         # Evaluate new state, don't update displacement until after checking for wall collision
         self.velocity = new_v(a, u, time)

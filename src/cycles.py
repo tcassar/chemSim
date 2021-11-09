@@ -30,7 +30,7 @@ def pairwise_cycle(container: Container) -> str:
     res: Decimal = 1 / (Decimal('10') ** 7)
     avg_r = Decimal('0')
 
-    frames = 10000
+    frames = 100000
 
     with open('../logs/precalibrated.log', 'w') as f:
         for i in range(1, 11):

@@ -73,7 +73,7 @@ def pairwise_cycle_test():
 
     # Initialise atoms, assign to a container
 
-    atoms = [Atom(Decimal('-0.25'), 0, ID=1), Atom(Decimal('0.25'), 0)]
+    atoms = [Atom(Decimal('0.4'), 0, ID=1), Atom(Decimal('0'), 0)]
 
     walls = [Decimal(-10.1), Decimal(10.1)]
     ctr = Container(walls)
