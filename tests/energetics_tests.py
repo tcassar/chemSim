@@ -38,7 +38,6 @@ class EnergeticsTests(TestCase):
 
         self.lj.eval_distance()
 
-
     def test_e0(self):
         """
         Test case verifying **energy** at eqm distance
