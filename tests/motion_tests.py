@@ -14,11 +14,6 @@ def suvat(*, u: Decimal, a: Decimal, t: Decimal) -> tuple[Decimal, Decimal]:
 class MotionTests(TestCase):
     """Tests that the atom moves as it should. All done by setting mass to 1, so that F=a"""
 
-    def setUpModule(self):
-        # Initialise an atom
-        self.atom = src.atom.Atom(Decimal('0'), Decimal('0'))
-        self.atom.mass = 1
-
     def setUp(self) -> None:
         self.atom = src.atom.Atom(Decimal('0'), Decimal('0'))
         self.atom.mass = 1
@@ -46,7 +41,7 @@ class MotionTests(TestCase):
             self.atom.accumulate_force(force)
             self.atom.move(time)
 
-        sim_s, sim_v = self.atom.get_pos(), self.atom.get_v()
+        sim_s, sim_v = self.atom.get_pos(), self.atom.velocity
 
         with self.subTest("Testing Displacement"):
             self.assertEqual(sim_s, suvat_s)

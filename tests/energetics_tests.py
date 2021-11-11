@@ -1,21 +1,27 @@
 # Test class to verify that potential looks as it should
-from decimal import Decimal
-from random import random
 
 import numpy as np
 import src.atom
 import src.potential
+from decimal import Decimal
 from unittest import TestCase
+from random import random
+
+
+def setUpModule():
+    # TODO: Logger for tests
+    pass
 
 
 class EnergeticsTests(TestCase):
 
-    def setUpModule(self):
-        """
-        Initialise atoms and constants needed for energetics testing. Atoms initialised with random displacements
-        as to serve as a control in each tests, so can tests erroneous data
-        """
-        # Randomly initialised values, reset control each test
+    def setUp(self):
+
+        # Constants
+        self.sigma = Decimal('0.3345')
+        self.epsilon = Decimal('125.7')
+
+        # Randomly initialised values for a test
         self.a1default = Decimal(random())
         self.a2default = Decimal(random()) * -1
 
@@ -23,18 +29,11 @@ class EnergeticsTests(TestCase):
         self.atom1 = src.atom.Atom(Decimal(self.a1default), 0, ID=1)
         self.atom2 = src.atom.Atom(Decimal(self.a2default), 0, ID=2)
 
-        # Constants
-        self.sigma = Decimal('0.3345')
-        self.epsilon = Decimal('125.7')
-
-        self.lj = src.potential.Potential(self.atom1, self.atom2)
-        # TODO: Logger
-
-    def setUp(self):
-
-        self.setUpModule()
         self.atom1.set_pos(self.a1default)
         self.atom2.set_pos(self.a2default)
+
+        # Initialise Potential
+        self.lj = src.potential.Potential(self.atom1, self.atom2)
 
         self.lj.eval_distance()
 
@@ -76,5 +75,3 @@ class EnergeticsTests(TestCase):
         
         self.assertNotEqual(control_energy, Decimal('0'))
         self.assertEqual(e_sig, Decimal('0'))
-
-
