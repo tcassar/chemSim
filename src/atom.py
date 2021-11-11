@@ -64,13 +64,6 @@ class Atom:
         """Set velocity from outside class"""
         self.velocity = v
 
-    def get_v(self) -> Decimal:
-        """Get velocity from outside class"""
-        return self.velocity
-
-    def get_ID(self) -> str:
-        return f'{self.ID}'
-
     def inject_to(self, container):
         """Associates atom with container"""
         self.container = container
@@ -109,7 +102,6 @@ class Atom:
         # Retrieve current state
         u = self.velocity
         s0 = self.displacement
-
 
         # Evaluate new state, don't update displacement until after checking for wall collision
         self.velocity = new_v(a, u, time)

@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Union
-
 from atom import Atom
 
 
@@ -50,4 +49,3 @@ class Container:
             return Decimal(0)
 
         return adjustment
-

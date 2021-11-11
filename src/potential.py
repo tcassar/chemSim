@@ -27,8 +27,8 @@ class Potential:
         mol2 = self.atom2
         if mol1.get_pos() > mol2.get_pos():
             mol1, mol2 = mol2, mol1
-        return f'Atom{mol1.get_ID()} {mol1.get_pos():.4f}...[{self.distance:.4f}]' \
-               f'...Atom{mol2.get_ID()} {mol2.get_pos():.4f}'
+        return f'Atom{mol1.ID()} {mol1.get_pos():.4f}...[{self.distance:.4f}]' \
+               f'...Atom{mol2.ID()} {mol2.get_pos():.4f}'
 
     def __del__(self):
         # TODO: Log on destruction
@@ -109,7 +109,7 @@ class Potential:
         mol1, mol2 = self.atom1, self.atom2
 
         # Invert Velocities, elastic collisions
-        v1, v2 = mol1.get_v(), mol2.get_v()
+        v1, v2 = mol1.velocity, mol2.velocity
         mol1.set_v(v1 * -1)
         mol2.set_v(v2 * -1)
 
@@ -145,8 +145,8 @@ class Potential:
         energy = self._lj_energy()
         force = self._lj_force()
         out = f'\n======\nDistance: {self.distance:.4f}nm\nEnergy: {energy:.4f}K\nForce: {force:.4f}\n'
-        out += f'Particle A: {self.atom1}\n'
-        out += f'Particle B: {self.atom2}'
+        out += f'Particle A: {self.atom1!r}\n'
+        out += f'Particle B: {self.atom2!r:}'
         out += '\n======'
 
         return out

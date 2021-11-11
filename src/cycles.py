@@ -1,6 +1,7 @@
 from environment import Container
 from potential import Potential
 from decimal import Decimal
+from datetime import datetime
 import numpy as np
 from typing import TYPE_CHECKING
 
@@ -30,21 +31,24 @@ def pairwise_cycle(container: Container) -> str:
     res: Decimal = 1 / (Decimal('10') ** 7)
     avg_r = Decimal('0')
 
-    frames = 100000
+    frames = 10000
 
-    with open('../logs/precalibrated.log', 'w') as f:
-        for i in range(1, 11):
+    with open(f'../logs/runs/{datetime.now()}.log', 'w') as f:
+        for i in range(1, 101):
             for j in range(frames):
                 # delegate forces, save distance (r) for logging
                 r: Decimal = potential.split_force()
                 avg_r += r
-                res = np.sqrt(r) / 10 ** 6
+                # res = np.sqrt(r) / 10 ** 6
                 for atom in atoms:
                     atom.move(res)
             out = potential.report()
             f.write(out)
             print(out)
 
-        return f'{avg_r / (frames * 10)}'
-
+        avg = avg_r / (frames * 100)
+        error_avg = avg / ( np.power(Decimal(2), Decimal(1) / 6) * potential.sigma)
+        f.write(f'\nAverage distance: {avg:.7f}')
+        f.write(f'% Error: {abs(1-error_avg)*100}')
+        return f'{abs(1-error_avg)*100}'
 
