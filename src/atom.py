@@ -3,6 +3,7 @@
 # Moves given a force vector: Scale: vector class
 
 from decimal import Decimal
+import logging
 import numpy as np
 
 
@@ -28,7 +29,7 @@ class Atom:
 
         for i in [s, v]:
             if type(i) != Decimal:
-                print(f'WARNING: Approximating {i} to Decimal')
+                logging.warning(f'Approximating {i} to Decimal')
 
     def __repr__(self):
         return f'Atom(s={self.displacement}, v={self.velocity})'
@@ -112,6 +113,6 @@ class Atom:
             if collided := self.container.out_of_bounds(self.displacement):
                 self.velocity *= Decimal('-0.00001')  # FIXME: coef is absolute bollocks
                 self.displacement = collided
-                print(f'{self} collided with wall')
+                logging.info(f'{self} collided with wall')
 
         return self.displacement

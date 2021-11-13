@@ -1,9 +1,9 @@
 # Sets up objects that affect physical env of sim, such as container boundaries, temperature control, etc.
 
+from src.atom import Atom
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Union
-from atom import Atom
 
 
 @dataclass

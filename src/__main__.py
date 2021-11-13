@@ -1,9 +1,9 @@
-from atom import Atom
-from environment import Container
-from potential import Potential
+from src.atom import Atom
+from src.environment import Container
+from src.potential import Potential
 from decimal import Decimal
 
-import cycles
+import src.cycles
 
 
 def compute_frame(atoms: list[Atom], resolution: Decimal):
@@ -80,7 +80,7 @@ def pairwise_cycle_test():
     for atom in atoms:
         atom.inject_to(ctr)
 
-    return cycles.pairwise_cycle(ctr, time=Decimal('0.001'), datapoints=100)
+    return src.cycles.pairwise_cycle(ctr, time=Decimal('0.001'), datapoints=100)
 
 
 

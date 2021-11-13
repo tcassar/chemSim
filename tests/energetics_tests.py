@@ -9,7 +9,7 @@ from random import random
 
 
 def setUpModule():
-    # TODO: Logger for tests
+    # TODO: Logger for outputs
     pass
 
 
@@ -49,13 +49,13 @@ class EnergeticsTests(TestCase):
         r_sp: Decimal = np.multiply(Decimal(np.power(2, 1 / 6)), self.sigma)
 
         # Get control energy (K)
-        control_energy = self.lj._lj_energy()
+        control_energy = self.lj.lj_energy()
 
         # Set distance to equal turning point distance, calculate epsilon
         self.atom1.set_pos(Decimal('0'))
         self.atom2.set_pos(r_sp)
         self.lj.eval_distance()
-        calc_epsilon = self.lj._lj_energy()
+        calc_epsilon = self.lj.lj_energy()
 
         self.assertNotEqual(self.epsilon, control_energy)
         self.assertEqual(self.epsilon, abs(calc_epsilon))
@@ -63,7 +63,7 @@ class EnergeticsTests(TestCase):
     def test_e_sigma(self):
         """Verify that distance of sigma has net energy of 0, and that control distance does not"""
         # Get control energy (K)
-        control_energy = self.lj._lj_energy()
+        control_energy = self.lj.lj_energy()
 
         # Set atoms a distance of \sigma apart
         self.atom1.set_pos(Decimal('0'))
@@ -71,7 +71,7 @@ class EnergeticsTests(TestCase):
         self.lj.eval_distance()
 
         # Find energy at distance of sigma
-        e_sig = self.lj._lj_energy()
+        e_sig = self.lj.lj_energy()
         
         self.assertNotEqual(control_energy, Decimal('0'))
         self.assertEqual(e_sig, Decimal('0'))

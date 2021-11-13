@@ -1,31 +1,33 @@
-from environment import Container
-from potential import Potential
+from src.environment import Container
+from src.potential import Potential
 from decimal import Decimal
 from datetime import datetime
 import logging
 import numpy as np
-from os import mkdir
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from atom import Atom
+    from src.atom import Atom
 
 
-def write_to_csv(*, ljp: Potential,  res: Decimal, file) -> str:
+def write_to_csv(*, ljp: Potential, res: Decimal, file=False) -> str:
     """Will write to file in format
     distance, energy, force, time\n
     """
     # Gather Values
 
-    sf = lambda i: f'{i:.4f}'
+    sf = lambda i: f'{i:.12f}'
 
     distance = sf(ljp.eval_distance())
     energy = sf(ljp.lj_energy())
     force = sf(ljp.lj_force())
 
-    with open(file, 'a+') as f:
-        f.write(f'{distance}, {energy}, {force}, {res}\n')
-
+    out = f'{distance}, {energy}, {force}, {res}'
+    if file:
+        with open(file, 'a+') as f:
+            f.write(out)
+    else:
+        print(out)
     return 'Wrote values to disk'
 
 
@@ -43,18 +45,14 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
     Important to track average distance between atoms every 1000 cycles
     """
 
-    file_handle = datetime.now()
-    mkdir(f'../out/{file_handle}')
-
     def conditions() -> str:
         out = f'Time frame: {time}\n'
         out += f'Base Resolution: {res}\n'
         out += f'Dynamic Resolution: {dyn_res}\n'
         return out
 
-    logging.basicConfig(filename=f'../out/{file_handle}/{file_handle}.log', level=logging.INFO, format='%(levelname)s:%(message)s')
-    output = f'../out/{file_handle}/{file_handle}.csv'
-    logging.info(f'File to write to configured: {output}')
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
+    logging.info(f'File to write to configured: STDOUT')
 
     # Check length, set counters, initialise objects
     atoms: list[Atom] = container.contained_atoms
@@ -95,7 +93,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
     for point in range(datapoints):
         t = Decimal('0')
         logging.info(point)
-        logging.info(write_to_csv(ljp=potential, res=(point * time_per_point) + t, file=output))
+        logging.info(write_to_csv(ljp=potential, res=(point * time_per_point) + t))
         # print(point, write_to_csv(ljp=potential, res=(point * time_per_point) + t, file=output))
         while t < time_per_point:
             r: Decimal = potential.split_force()
@@ -108,9 +106,8 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
                 atom.move(res)
             t += res
 
-
     avg_r = cumul_r / frames
-    percent_error = (avg_r - expected_r)/expected_r
+    percent_error = (avg_r - expected_r) / expected_r
     sign = lambda i: ('+' if i > 0 else '-')
 
     logging.info(f'Average Distance: {avg_r:.4f}; Expected {expected_r:.4f}')
