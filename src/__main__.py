@@ -80,7 +80,8 @@ def pairwise_cycle_test():
     for atom in atoms:
         atom.inject_to(ctr)
 
-    return cycles.pairwise_cycle(ctr)
+    return cycles.pairwise_cycle(ctr, time=Decimal('0.001'), datapoints=100)
+
 
 
 if __name__ == '__main__':

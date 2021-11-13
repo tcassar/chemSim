@@ -16,6 +16,9 @@ class Potential:
 
         self.distance = self.eval_distance()
 
+    def __repr__(self):
+        return f'Potential({self.atom1}, {self.atom2})'
+
     def __hash__(self) -> int:
         """Potential's hash is built from concatenating mol IDs"""
         x = xxhash.xxh32()
@@ -64,7 +67,7 @@ class Potential:
 
     # ==== MOTION ====
 
-    def _lj_energy(self) -> Decimal:
+    def lj_energy(self) -> Decimal:
         """
         Calculate energy from Lennard Jones Potential
         """
@@ -79,7 +82,7 @@ class Potential:
 
         return 4 * epsilon * (repulsive - attractive)
 
-    def _lj_force(self) -> Decimal:
+    def lj_force(self) -> Decimal:
         """Calculate force by differentiating LJ Potential, units of J per nm"""
         # TODO: Log when calculated
         r: Decimal = self.distance
@@ -133,20 +136,20 @@ class Potential:
         if r <= 0:
             self._mols_collision()
 
-        force = self._lj_force()
+        force = self.lj_force()
         self.atom1.accumulate_force(force)
         self.atom2.accumulate_force(force * -1)
 
         return r
 
-    def report(self):
-        """Debug output""" 
+    def report(self) -> str:
+        """Typical log output for potential. Should be called after running a splitforce"""
 
-        energy = self._lj_energy()
-        force = self._lj_force()
-        out = f'\n======\nDistance: {self.distance:.4f}nm\nEnergy: {energy:.4f}K\nForce: {force:.4f}\n'
-        out += f'Particle A: {self.atom1!r}\n'
-        out += f'Particle B: {self.atom2!r:}'
+        energy = self.lj_energy()
+        force = self.lj_force()
+        out = f'\n======\nDistance: {self.distance:.4f}nm\nEnergy: {energy:.4f}K\nForce: {force/100:.4f}pN\n'
+        out += f'Particle A: {self.atom1.get_pos():.7f}\n'
+        out += f'Particle B: {self.atom2.get_pos():.7f}'
         out += '\n======'
 
         return out
