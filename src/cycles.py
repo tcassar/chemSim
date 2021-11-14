@@ -19,7 +19,7 @@ def write_to_csv(*, ljp: Potential, res: Decimal, file=False) -> str:
 
     distance = sf(ljp.eval_distance())
     energy = sf(ljp.lj_energy())
-    force = sf(ljp.lj_force())
+    force = sf(ljp.lj_force()/10)
 
     out = f'{distance}, {energy}, {force}, {res}'
     if file:
@@ -54,7 +54,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
     def log_when_exit(time) -> str:
         avg_r = cumul_r / frames
         percent_error = 100 * ((avg_r - expected_r) / expected_r)
-        sign = lambda i: ('+' if i > 0 else '-')
+        sign = lambda i: ('+' if i > 0 else '')
 
         logging.info(f'{time}s of motion simulated over {frames:,} frames')
         logging.info(f'Average Distance: {avg_r}; Expected {expected_r}')

@@ -76,7 +76,7 @@ def pairwise_cycle_test(*, r_0: str, time: str, samples: int):
 
     # Initialise atoms, assign to a container
 
-    atoms = [Atom(Decimal('0'), Decimal('-0.001'), ID=1), Atom(Decimal(r_0), Decimal('0.001'))]
+    atoms = [Atom(Decimal('0'), Decimal('0.001'), ID=1), Atom(Decimal(r_0), Decimal('-0.001'))]
 
     walls = [Decimal(-10.1), Decimal(10.1)]
     ctr = Container(walls)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     logging.info(f'\nStream to write to configured: STDOUT\n')
-    print(f'interatomic distance(nm), energy(K), force(nN), time elapsed')
+    print(f'interatomic distance(nm), energy(K), force(nN), time elapsed(s)')
 
     start = datetime.datetime.now()
     pairwise_cycle_test(r_0=args.r_0, time=args.time, samples=args.samples)

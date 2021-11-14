@@ -3,6 +3,7 @@
 from src.atom import Atom
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import Union
 
 
 @dataclass
@@ -29,7 +30,7 @@ class Container:
     def __repr__(self):
         return f'Container(walls={self.walls}'
 
-    def add_atom(self, atom: Atom|list[Atom]):
+    def add_atom(self, atom: Union[Atom, list[Atom]]):
         """Adds atom to running container list"""
         self.contained_atoms.append(atom)
 

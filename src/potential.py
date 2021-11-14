@@ -1,7 +1,6 @@
 from src.atom import Atom
 from decimal import Decimal
 import numpy as np
-# import xxhash
 
 
 class Potential:
@@ -86,13 +85,12 @@ class Potential:
         """Calculate force by differentiating LJ Potential, units of nN"""
         # TODO: Log when calculated
         r: Decimal = self.distance
-        e = self.epsilon
-        s = self.sigma
 
-        a = Decimal((24 * e * np.power(s, 6)) * np.power(r, -7))
-        b = Decimal((2 * np.power(s, 6)) * np.power(r, -6) - 1)
+        s_r = self.sigma / r
+        a = (4 * self.epsilon * self.sigma) / (r * r)
 
-        return (a * b) / 10  # account for adjustment to nN
+        return a * (6 * np.power(s_r, 5) - 12 * np.power(s_r, 11))
+
 
     # ==== COLLISION HANDLING ====
     # i.e. how to deal with a collision AFTER detection BETWEEN PARTICLES
