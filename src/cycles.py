@@ -27,7 +27,7 @@ def write_to_csv(*, ljp: Potential, res: Decimal, file=False) -> str:
             f.write(out)
     else:
         print(out)
-    return 'Wrote values to STDOUT'
+    return f'Wrote values to STDOUT at virtual time {res:.4f}'
 
 
 def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> None:
