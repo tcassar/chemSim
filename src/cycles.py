@@ -60,6 +60,9 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
         logging.info(f'Average Distance: {avg_r}; Expected {expected_r}')
         logging.info(f'% Error: {sign(percent_error)}{percent_error:.3f}%')
 
+        # put expected values in stdout
+        r_e, energy, force, time = potential.expected_vals()
+        print(f'{r_e}, {energy}, {force}, {time}')
         return 'Cycle has ended'
 
     # Check length, set counters, initialise objects

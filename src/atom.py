@@ -111,7 +111,7 @@ class Atom:
         # Detect and handle collisions with walls
         if self.contained:
             if collided := self.container.out_of_bounds(self.displacement):
-                self.velocity *= Decimal('-0.00001')  # FIXME: coef is absolute bollocks
+                self.velocity *= Decimal('-0.1')  # FIXME: coef is absolute bollocks
                 self.displacement = collided
                 logging.info(f'{self} collided with wall')
 
