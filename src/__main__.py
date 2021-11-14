@@ -95,19 +95,19 @@ if __name__ == '__main__':
     Base Resolution: 1E-7
     Dynamic Resolution: False
     
-    
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('r_0')
-    parser.add_argument('time')
-    parser.add_argument('samples')
-
+    parser.add_argument('r_0', help='eqm distance(nm)')
+    parser.add_argument('time', help='simulation time')
+    parser.add_argument('samples', type=int, help='number of samples to take')
+    # parser.add_argument('-r', '--resolution', help='resolution in ns')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
-    logging.info(f'\nStream to write to configured: STDOUT\n'
-                 f'interatomic distance(nm), energy(K), force(nN), time elapsed')
+    logging.info(f'\nStream to write to configured: STDOUT\n')
+    print(f'interatomic distance(nm), energy(K), force(nN), time elapsed')
+
     start = datetime.datetime.now()
-    pairwise_cycle_test(r_0=args.r_0, time=args.time, samples=int(args.samples))
+    pairwise_cycle_test(r_0=args.r_0, time=args.time, samples=args.samples)
     logging.info(f'Completed in {datetime.datetime.now() - start}')
