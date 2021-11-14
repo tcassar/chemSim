@@ -2,6 +2,8 @@ from src.atom import Atom
 import src.cycles
 from src.environment import Container
 from src.potential import Potential
+
+import argparse
 from decimal import Decimal
 import datetime
 import logging
@@ -21,7 +23,7 @@ def two_atm_init():
     ar1.inject_to(ctr)
     ar2.inject_to(ctr)
 
-    print(ar1, ar2)
+    # print(ar1, ar2)
     return intr, ar1, ar2
 
 def two_atom_uncontained():
@@ -33,7 +35,7 @@ def two_atom_uncontained():
             if not i % 10 ** (log_frames - 2):
                 intr.split_force()
                 compute_frame(atoms, Decimal('0.001'))
-                print(intr)
+                # print(intr)
 
 
 def three_atom():
@@ -67,29 +69,45 @@ def three_atom():
                 for atom in atoms:
                     atom.move(Decimal(0.001))
 
-                print(*intrs)
+                # print(*intrs)
 
 
-def pairwise_cycle_test():
+def pairwise_cycle_test(*, r_0: str, time: str, samples: int):
 
     # Initialise atoms, assign to a container
 
-    atoms = [Atom(Decimal('0.38'), Decimal('-0.0005'), ID=1), Atom(Decimal('0'), Decimal('0.0005'))]
+    atoms = [Atom(Decimal('0'), Decimal('-0.001'), ID=1), Atom(Decimal(r_0), Decimal('0.001'))]
 
     walls = [Decimal(-10.1), Decimal(10.1)]
     ctr = Container(walls)
     for atom in atoms:
         atom.inject_to(ctr)
 
-    return src.cycles.pairwise_cycle(ctr, time=Decimal('0.1'), datapoints=100)
-
+    return src.cycles.pairwise_cycle(ctr, time=Decimal(time), datapoints=samples)
 
 
 if __name__ == '__main__':
+    """
+    Good initial conditions
+    INFO:Initial Conditions: 
+    Distance: 0.38
+    Time frame: 0.1
+    Base Resolution: 1E-7
+    Dynamic Resolution: False
+    
+    
+    """
 
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
-    logging.info(f'File to write to configured: STDOUT')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('r_0')
+    parser.add_argument('time')
+    parser.add_argument('samples')
 
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+    logging.info(f'\nStream to write to configured: STDOUT\n'
+                 f'interatomic distance(nm), energy(K), force(nN), time elapsed')
     start = datetime.datetime.now()
-    pairwise_cycle_test()
+    pairwise_cycle_test(r_0=args.r_0, time=args.time, samples=int(args.samples))
     logging.info(f'Completed in {datetime.datetime.now() - start}')

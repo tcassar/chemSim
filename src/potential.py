@@ -1,7 +1,7 @@
 from src.atom import Atom
 from decimal import Decimal
 import numpy as np
-import xxhash
+# import xxhash
 
 
 class Potential:
@@ -19,11 +19,11 @@ class Potential:
     def __repr__(self):
         return f'Potential({self.atom1}, {self.atom2})'
 
-    def __hash__(self) -> int:
-        """Potential's hash is built from concatenating mol IDs"""
-        x = xxhash.xxh32()
-        x.update(bytes(f'{self.atom1.ID}{self.atom2.ID}'))
-        return x.intdigest()
+    # def __hash__(self) -> int:
+    #     """Potential's hash is built from concatenating mol IDs"""
+    #     x = xxhash.xxh32()
+    #     x.update(bytes(f'{self.atom1.ID}{self.atom2.ID}'))
+    #     return x.intdigest()
 
     def __str__(self):
         mol1 = self.atom1
@@ -83,7 +83,7 @@ class Potential:
         return 4 * epsilon * (repulsive - attractive)
 
     def lj_force(self) -> Decimal:
-        """Calculate force by differentiating LJ Potential, units of J per nm"""
+        """Calculate force by differentiating LJ Potential, units of nN"""
         # TODO: Log when calculated
         r: Decimal = self.distance
         e = self.epsilon
@@ -92,7 +92,7 @@ class Potential:
         a = Decimal((24 * e * np.power(s, 6)) * np.power(r, -7))
         b = Decimal((2 * np.power(s, 6)) * np.power(r, -6) - 1)
 
-        return a * b
+        return (a * b) / 10  # account for adjustment to nN
 
     # ==== COLLISION HANDLING ====
     # i.e. how to deal with a collision AFTER detection BETWEEN PARTICLES

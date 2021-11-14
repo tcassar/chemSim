@@ -27,7 +27,7 @@ def write_to_csv(*, ljp: Potential, res: Decimal, file=False) -> str:
             f.write(out)
     else:
         print(out)
-    return 'Wrote values to disk'
+    return 'Wrote values to STDOUT'
 
 
 def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> None:
@@ -45,17 +45,18 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
     """
 
     def conditions() -> str:
-        out = f'Time frame: {time}\n'
+        out = f'\nInteratomic Distance (r_0): {potential.eval_distance()}'
+        out += f'Time frame: {time}\n'
         out += f'Base Resolution: {res}\n'
         out += f'Dynamic Resolution: {dyn_res}\n'
         return out
 
-    def log_when_exit() -> str:
+    def log_when_exit(time) -> str:
         avg_r = cumul_r / frames
         percent_error = 100 * ((avg_r - expected_r) / expected_r)
         sign = lambda i: ('+' if i > 0 else '-')
 
-        logging.info(f'{}s of motion simulated over {frames} frames')
+        logging.info(f'{time}s of motion simulated over {frames:,} frames')
         logging.info(f'Average Distance: {avg_r}; Expected {expected_r}')
         logging.info(f'% Error: {sign(percent_error)}{percent_error:.3f}%')
 
@@ -63,7 +64,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
 
     # Check length, set counters, initialise objects
     atoms: list[Atom] = container.contained_atoms
-    print(atoms)
+    # print(atoms)
     assert len(atoms) == 2
 
     potential = Potential(*atoms)
@@ -106,9 +107,9 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
                     atom.move(res)
                 t += res
     except KeyboardInterrupt:
-        logging.warning("Keyboard Interrupt")
-        logging.info(log_when_exit())
-        quit()
+        logging.warning("\nKeyboard Interrupt")
+        logging.warning('Could not find elapsed time')
+        logging.info(log_when_exit('___'))
+        return
 
-    logging.info(log_when_exit())
-
+    logging.info(log_when_exit(time))

@@ -1,2 +1,51 @@
-WARNING:root:Approximating 0 to Decimal
-WARNING:root:Approximating 0 to Decimal
+INFO: 
+Stream to write to configured: STDOUT
+interatomic distance(nm), energy(K), force(nN), time elapsed
+INFO: Initial Conditions: 
+Interatomic Distance (r_0): 0.38Time frame: 0.1
+Base Resolution: 1E-7
+Dynamic Resolution: False
+
+INFO: Objects: Atom(s=0, v=-0.001)
+Atom(s=0.38, v=0.001)
+Potential(Atom001, Atom000)
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+INFO: Wrote values to STDOUT
+WARNING: 
+Keyboard Interrupt
+WARNING: Could not find elapsed time
+INFO: ___s of motion simulated over 31,814 frames
+INFO: Average Distance: 0.3800053508050661358295602254; Expected 0.3754635551594852622895168052
+INFO: % Error: +1.210%
+INFO: Cycle has ended
+INFO: Completed in 0:00:02.272545
