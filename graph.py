@@ -51,7 +51,6 @@ straight_line(0)
 axs[0].set(xlabel=labels[3], ylabel=labels[0])
 
 axs[1].plot(time, energy)
-straight_line(1)
 axs[1].set(xlabel=labels[3], ylabel=labels[1])
 
 axs[2].plot(time, force)

@@ -151,10 +151,3 @@ class Potential:
         out += '\n======'
 
         return out
-
-    def expected_vals(self):
-        r_e = np.power(Decimal('2'), Decimal('1')/6) * self.sigma
-        energy = self.epsilon
-        force = 0
-
-        return r_e, energy, force, 0

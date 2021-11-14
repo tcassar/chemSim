@@ -61,8 +61,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
         logging.info(f'% Error: {sign(percent_error)}{percent_error:.3f}%')
 
         # put expected values in stdout
-        r_e, energy, force, time = potential.expected_vals()
-        print(f'{r_e}, {energy}, {force}, {time}')
+        print(f'{expected_r}, 0, 0, 0')
         return 'Cycle has ended'
 
     # Check length, set counters, initialise objects
@@ -90,7 +89,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> No
 
     # Log initial conditions
     logging.info(f'Initial Conditions: {conditions()}')
-    logging.info(f'Objects: {atoms[0]!r}\n{atoms[1]!r}\n{potential!r}')
+    logging.info(f'Objects:\n\t{atoms[0]!r}\n\t{atoms[1]!r}\n\t{potential!r}')
 
     # Loop for total time, with desired number of outputs
     time_per_point: Decimal = time / datapoints
