@@ -1,9 +1,10 @@
 from src.atom import Atom
+import src.cycles
 from src.environment import Container
 from src.potential import Potential
 from decimal import Decimal
-
-import src.cycles
+import datetime
+import logging
 
 
 def compute_frame(atoms: list[Atom], resolution: Decimal):
@@ -73,16 +74,22 @@ def pairwise_cycle_test():
 
     # Initialise atoms, assign to a container
 
-    atoms = [Atom(Decimal('0.4'), 0, ID=1), Atom(Decimal('0'), 0)]
+    atoms = [Atom(Decimal('0.38'), Decimal('-0.0005'), ID=1), Atom(Decimal('0'), Decimal('0.0005'))]
 
     walls = [Decimal(-10.1), Decimal(10.1)]
     ctr = Container(walls)
     for atom in atoms:
         atom.inject_to(ctr)
 
-    return src.cycles.pairwise_cycle(ctr, time=Decimal('0.001'), datapoints=100)
+    return src.cycles.pairwise_cycle(ctr, time=Decimal('0.1'), datapoints=100)
 
 
 
 if __name__ == '__main__':
-    print(pairwise_cycle_test())
+
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
+    logging.info(f'File to write to configured: STDOUT')
+
+    start = datetime.datetime.now()
+    pairwise_cycle_test()
+    logging.info(f'Completed in {datetime.datetime.now() - start}')

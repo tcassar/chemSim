@@ -1,7 +1,6 @@
 from src.environment import Container
 from src.potential import Potential
 from decimal import Decimal
-from datetime import datetime
 import logging
 import numpy as np
 from typing import TYPE_CHECKING
@@ -31,7 +30,7 @@ def write_to_csv(*, ljp: Potential, res: Decimal, file=False) -> str:
     return 'Wrote values to disk'
 
 
-def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
+def pairwise_cycle(container: Container, time: Decimal(), datapoints: int) -> None:
     """
     Pairwise cycle runs as follows:
     SETUP:
@@ -51,8 +50,16 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
         out += f'Dynamic Resolution: {dyn_res}\n'
         return out
 
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
-    logging.info(f'File to write to configured: STDOUT')
+    def log_when_exit() -> str:
+        avg_r = cumul_r / frames
+        percent_error = 100 * ((avg_r - expected_r) / expected_r)
+        sign = lambda i: ('+' if i > 0 else '-')
+
+        logging.info(f'{}s of motion simulated over {frames} frames')
+        logging.info(f'Average Distance: {avg_r}; Expected {expected_r}')
+        logging.info(f'% Error: {sign(percent_error)}{percent_error:.3f}%')
+
+        return 'Cycle has ended'
 
     # Check length, set counters, initialise objects
     atoms: list[Atom] = container.contained_atoms
@@ -65,16 +72,8 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
     cumul_r = Decimal('0')
     frames = 0
 
+    # calculate expected values for distance
     expected_r = (np.power(Decimal(2), Decimal(1) / 6) * potential.sigma)
-
-    # for i in range(1, outputs + 1):
-    #     for j in range(frames):
-    #         # delegate forces, save distance (r) for logging
-    #         r: Decimal = potential.split_force()
-    #         avg_r += r
-    #         for atom in atoms:
-    #             atom.move(res)
-    #     potential.report()
 
     # Make sure time is a Decimal, crash if not
     if type(time) != Decimal:
@@ -83,6 +82,7 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
             logging.warning(f"Approximating time {time} to Decimal")
         except TypeError:
             logging.critical("Time is not a Decimal and cannot be approximated to one; exiting")
+            quit()
 
     # Log initial conditions
     logging.info(f'Initial Conditions: {conditions()}')
@@ -90,25 +90,25 @@ def pairwise_cycle(container: Container, time: Decimal(), datapoints: int):
 
     # Loop for total time, with desired number of outputs
     time_per_point: Decimal = time / datapoints
-    for point in range(datapoints):
-        t = Decimal('0')
-        logging.info(point)
-        logging.info(write_to_csv(ljp=potential, res=(point * time_per_point) + t))
-        # print(point, write_to_csv(ljp=potential, res=(point * time_per_point) + t, file=output))
-        while t < time_per_point:
-            r: Decimal = potential.split_force()
-            frames += 1
-            cumul_r += r
-            for atom in atoms:
-                if dyn_res and r < expected_r:
-                    # TODO: fine tune dyn res function
-                    pass
-                atom.move(res)
-            t += res
 
-    avg_r = cumul_r / frames
-    percent_error = (avg_r - expected_r) / expected_r
-    sign = lambda i: ('+' if i > 0 else '-')
+    try:
+        for point in range(datapoints):
+            t = Decimal('0')
+            logging.info(write_to_csv(ljp=potential, res=(point * time_per_point) + t))
+            while t < time_per_point:
+                r: Decimal = potential.split_force()
+                frames += 1
+                cumul_r += r
+                for atom in atoms:
+                    if dyn_res and r < expected_r:
+                        # TODO: fine tune dyn res function
+                        pass
+                    atom.move(res)
+                t += res
+    except KeyboardInterrupt:
+        logging.warning("Keyboard Interrupt")
+        logging.info(log_when_exit())
+        quit()
 
-    logging.info(f'Average Distance: {avg_r:.4f}; Expected {expected_r:.4f}')
-    logging.info(f'% Error: {sign(percent_error)}{percent_error:.3f}')
+    logging.info(log_when_exit())
+
