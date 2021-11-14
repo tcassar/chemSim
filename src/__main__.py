@@ -94,7 +94,6 @@ if __name__ == '__main__':
     Time frame: 0.1
     Base Resolution: 1E-7
     Dynamic Resolution: False
-    
     """
 
     parser = argparse.ArgumentParser()
@@ -107,6 +106,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     logging.info(f'\nStream to write to configured: STDOUT\n')
     print(f'interatomic distance(nm), energy(K), force(nN), time elapsed(s)')
+    logging.info(f'Original args: {args.r_0}, {args.time}, {args.samples}')
 
     start = datetime.datetime.now()
     pairwise_cycle_test(r_0=args.r_0, time=args.time, samples=args.samples)

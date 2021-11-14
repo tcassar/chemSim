@@ -2,7 +2,7 @@ INFO:
 Stream to write to configured: STDOUT
 
 INFO: Initial Conditions:
-Interatomic Distance (r_0): 0.38Time frame: 0.3
+Interatomic Distance (r_0): 0.38 Time frame: 0.3
 Base Resolution: 1E-7
 Dynamic Resolution: False
 
