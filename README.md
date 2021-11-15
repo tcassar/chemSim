@@ -1,4 +1,4 @@
-# Simulating the motion of argon atoms based off their initial velocity, and their inter-atomic forces
+# Simulating the motion of argon atoms from initial interatomic distance, and interatomic energy
 ---
 ## Project Outline
 ### Description
